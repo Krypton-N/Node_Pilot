@@ -1,0 +1,21 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.tree-row .tree-del {
+  visibility: hidden;
+  line-height: 1;
+}
+.tree-row:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.tree-row:hover .tree-del {
+  visibility: visible;
+}
+
+.file-tree {
+  user-select: none;
+}
