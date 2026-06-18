@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:#0B0D10}
+  body{font-family:'Inter',-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:rgba(217,43,33,.35)}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.09);border-radius:6px;border:2px solid transparent;background-clip:padding-box}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.16);background-clip:padding-box}
+  ::-webkit-scrollbar-track{background:transparent}
+  @keyframes np-pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(48,184,92,.5)}50%{opacity:.65;box-shadow:0 0 0 4px rgba(48,184,92,0)}}
+  @keyframes np-caret{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes np-fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes np-spin{to{transform:rotate(360deg)}}
+  .np-caret{display:inline-block;width:2px;height:15px;background:#E0352A;vertical-align:-3px;margin-left:1px;animation:np-caret 1.1s steps(1) infinite}
+  .np-hov{transition:background .16s ease,color .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease}
+  .np-hov:hover{background:rgba(255,255,255,.06)}
+  .np-row:hover{background:rgba(255,255,255,.04)}
+  .np-lift{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+  .np-lift:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.14)}
+  .np-msg{animation:np-fade .4s ease both}
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;background:radial-gradient(120% 90% at 78% -10%,rgba(217,43,33,.10),transparent 46%),radial-gradient(80% 70% at 0% 110%,rgba(40,52,66,.30),transparent 55%),#0B0D10;color:#E8EAED;font-size:13px;display:flex;flex-direction:column;overflow:hidden">
+
+  <!-- ============ TOP BAR ============ -->
+  <div style="height:50px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 14px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(11,13,16,.6);backdrop-filter:blur(18px)">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div style="width:25px;height:25px;border-radius:8px;background:linear-gradient(150deg,#E0352A,#9E1B14);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(224,53,42,.4),inset 0 1px 0 rgba(255,255,255,.25)">
+          <div style="width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25)"></div>
+        </div>
+        <span style="font-weight:700;letter-spacing:-.02em;font-size:14px">NodePilot</span>
+      </div>
+      <div style="width:1px;height:18px;background:rgba(255,255,255,.09)"></div>
+      <div class="np-hov" style="display:flex;align-items:center;gap:8px;padding:5px 9px 5px 10px;border-radius:9px;cursor:pointer;border:1px solid rgba(255,255,255,.06)">
+        <div style="width:16px;height:16px;border-radius:5px;background:linear-gradient(140deg,#3a4654,#222a33)"></div>
+        <span style="font-weight:600;font-size:12.5px">NavyProject</span>
+        <span style="color:#5A616A;font-size:10px">▾</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:8px;background:rgba(48,184,92,.10);border:1px solid rgba(48,184,92,.22)">
+        <span style="width:6px;height:6px;border-radius:50%;background:#30B85C;animation:np-pulse 2.4s ease infinite"></span>
+        <span style="font-size:11px;color:#8FE0AB;font-weight:600">backend activo</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07)">
+        <span style="color:#30B85C;font-size:12px">✓</span>
+        <span style="font-size:11px;color:#969CA4;font-weight:500">build ok · 1.2s</span>
+      </div>
+      <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);cursor:pointer">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#969CA4" stroke-width="1.6"><circle cx="4" cy="4" r="2"></circle><circle cx="4" cy="12" r="2"></circle><circle cx="12" cy="6" r="2"></circle><path d="M4 6v4M12 8c0 2-2 2.5-4 2.5"></path></svg>
+        <span style="font-size:11px;color:#C9CED4;font-weight:500">main</span>
+      </div>
+      <div style="width:1px;height:18px;background:rgba(255,255,255,.09);margin:0 2px"></div>
+      <div class="np-hov" style="width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"></path></svg>
+      </div>
+      <div class="np-lift" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(140deg,#46525f,#2a323b);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer">JL</div>
+    </div>
+  </div>
+
+  <!-- ============ VARIATION A : FLOATING PANELS ============ -->
+  <sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;min-height:0;display:flex;gap:10px;padding:10px">
+
+    <!-- LEFT SIDEBAR -->
+    <div style="width:266px;flex:none;display:flex;flex-direction:column;gap:10px;min-height:0">
+      <div style="background:rgba(18,21,25,.85);border:1px solid rgba(255,255,255,.06);border-radius:14px;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.35)">
+        <!-- search -->
+        <div style="padding:11px 11px 9px">
+          <div class="np-hov" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);cursor:text">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5A616A" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+            <span style="color:#5A616A;font-size:12px;flex:1">Buscar archivos…</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px;color:#5A616A;border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:1px 5px">⌘K</span>
+          </div>
+        </div>
+        <!-- explorer -->
+        <div style="padding:2px 8px;overflow-y:auto;flex:1;min-height:0">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 6px 6px 8px">
+            <span style="font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#5A616A;text-transform:uppercase">Explorador</span>
+            <div style="display:flex;gap:2px">
+              <div class="np-hov" style="width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 11v6M9 14h6"></path></svg></div>
+              <div class="np-hov" style="width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
+            </div>
+          </div>
+          <!-- tree -->
+          <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:pointer;font-weight:500"><span style="color:#5A616A;font-size:9px">▾</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#3a4654" stroke="none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span style="color:#C9CED4">src</span></div>
+          <div style="margin-left:13px;border-left:1px solid rgba(255,255,255,.06);padding-left:4px">
+            <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:pointer"><span style="color:#5A616A;font-size:9px">▾</span><svg width="13" height="13" viewBox="0 0 24 24" fill="#3a4654"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span style="color:#969CA4">routes</span></div>
+            <div style="margin-left:13px;border-left:1px solid rgba(255,255,255,.06);padding-left:4px">
+              <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:4.5px 8px;border-radius:8px;cursor:pointer"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="color:#969CA4">users.js</span><span style="margin-left:auto;font-family:'JetBrains Mono';font-size:9px;color:#30B85C">M</span></div>
+            </div>
+            <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:pointer"><span style="color:#5A616A;font-size:9px">▸</span><svg width="13" height="13" viewBox="0 0 24 24" fill="#3a4654"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span style="color:#969CA4">db</span></div>
+            <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:4.5px 8px;border-radius:8px;cursor:pointer"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="color:#969CA4">User.js</span></div>
+            <div style="display:flex;align-items:center;gap:7px;padding:4.5px 8px;border-radius:8px;cursor:pointer;background:rgba(224,53,42,.13);box-shadow:inset 2px 0 0 #E0352A"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="color:#fff;font-weight:600">index.js</span></div>
+          </div>
+          <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:pointer;margin-top:1px"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#6DA8FF">{}</span><span style="color:#969CA4">package.json</span></div>
+          <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:pointer"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#6DA8FF">{}</span><span style="color:#5A616A">package-lock.json</span></div>
+          <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:8px;cursor:pointer"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#969CA4">md</span><span style="color:#969CA4">README.md</span></div>
+        </div>
+        <!-- git status -->
+        <div style="border-top:1px solid rgba(255,255,255,.06);padding:10px 12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+            <span style="font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#5A616A;text-transform:uppercase">Cambios</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px;color:#969CA4;background:rgba(255,255,255,.05);padding:1px 7px;border-radius:20px">2</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'JetBrains Mono';font-size:10px;color:#30B85C;width:10px">M</span><span style="font-size:11.5px;color:#C9CED4">routes/users.js</span></div>
+            <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'JetBrains Mono';font-size:10px;color:#6DA8FF;width:10px">A</span><span style="font-size:11.5px;color:#C9CED4">db/User.js</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:0">
+      <!-- tabs + editor panel -->
+      <div style="background:rgba(15,18,22,.9);border:1px solid rgba(255,255,255,.06);border-radius:14px;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.35)">
+        <!-- tab strip -->
+        <div style="display:flex;align-items:center;gap:2px;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,.06)">
+          <div onClick="{{ tabCode }}" class="np-hov" style="{{ sCode }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"></path></svg>Código</div>
+          <div onClick="{{ tabPreview }}" class="np-hov" style="{{ sPreview }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M3 8h18"></path></svg>Vista previa</div>
+          
+          <div onClick="{{ tabLogs }}" class="np-hov" style="{{ sLogs }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>Logs</div>
+          <div onClick="{{ tabDb }}" class="np-hov" style="{{ sDb }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"></ellipse><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"></path></svg>Base de datos</div>
+          <div style="margin-left:auto;display:flex;gap:6px;padding-right:4px">
+            <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;color:#969CA4;font-size:11.5px;font-weight:500;border:1px solid rgba(255,255,255,.07)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>Reformatear</div>
+          </div>
+        </div>
+
+        <!-- CODE TAB -->
+        <sc-if value="{{ isCode }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;flex:1;min-height:0">
+          <!-- open file tabs -->
+          <div style="display:flex;align-items:stretch;height:36px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(0,0,0,.18)">
+            <div style="display:flex;align-items:center;gap:8px;padding:0 13px;border-right:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.03);box-shadow:inset 0 -2px 0 #E0352A;position:relative"><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="font-size:12px;color:#fff;font-weight:500">index.js</span><span style="color:#5A616A;font-size:13px;margin-left:4px;cursor:pointer">×</span></div>
+            <div class="np-hov" style="display:flex;align-items:center;gap:8px;padding:0 13px;border-right:1px solid rgba(255,255,255,.05);cursor:pointer"><span style="width:6px;height:6px;border-radius:50%;background:#30B85C"></span><span style="font-size:12px;color:#969CA4">users.js</span></div>
+            <div class="np-hov" style="display:flex;align-items:center;gap:8px;padding:0 13px;border-right:1px solid rgba(255,255,255,.05);cursor:pointer"><span style="font-size:12px;color:#969CA4">User.js</span></div>
+            <div style="margin-left:auto;display:flex;align-items:center;padding:0 12px;gap:5px;font-size:11px;color:#5A616A;font-family:'JetBrains Mono'"><span>UTF-8</span><span style="color:#333">·</span><span>LF</span><span style="color:#333">·</span><span>JavaScript</span></div>
+          </div>
+          <!-- breadcrumb -->
+          <div style="display:flex;align-items:center;gap:6px;padding:7px 16px;font-size:11.5px;color:#5A616A;border-bottom:1px solid rgba(255,255,255,.04)"><span>src</span><span style="opacity:.5">›</span><span style="color:#969CA4">index.js</span></div>
+          <!-- editor -->
+          <div style="flex:1;min-height:0;overflow:auto;padding:12px 0;font-family:'JetBrains Mono';font-size:13px;line-height:1.85">
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">1</span><span><span style="color:#B98AE8">import</span> express <span style="color:#B98AE8">from</span> <span style="color:#8FD98F">'express'</span>;</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">2</span><span><span style="color:#B98AE8">import</span> { sequelize } <span style="color:#B98AE8">from</span> <span style="color:#8FD98F">'./db/connection.js'</span>;</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">3</span><span><span style="color:#B98AE8">import</span> usersRouter <span style="color:#B98AE8">from</span> <span style="color:#8FD98F">'./routes/users.js'</span>;</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">4</span><span></span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">5</span><span><span style="color:#B98AE8">const</span> <span style="color:#C9CED4">app</span> = <span style="color:#6DA8FF">express</span>();</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">6</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">use</span>(express.<span style="color:#6DA8FF">json</span>());</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">7</span><span></span></div>
+            <div style="display:flex;background:rgba(255,255,255,.025)"><span style="width:46px;text-align:right;padding-right:18px;color:#5A616A;flex:none">8</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">use</span>(<span style="color:#8FD98F">'/api/users'</span>, usersRouter);<span class="np-caret"></span></span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">9</span><span></span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">10</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">get</span>(<span style="color:#8FD98F">'/healthz'</span>, (req, res) <span style="color:#B98AE8">=&gt;</span> {</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">11</span><span>  res.<span style="color:#6DA8FF">json</span>({ status: <span style="color:#8FD98F">'ok'</span>, uptime: process.<span style="color:#6DA8FF">uptime</span>() });</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">12</span><span>});</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">13</span><span></span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">14</span><span><span style="color:#B98AE8">const</span> <span style="color:#C9CED4">PORT</span> = process.env.PORT <span style="color:#B98AE8">??</span> <span style="color:#E8A13A">4000</span>;</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">15</span><span></span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">16</span><span><span style="color:#B98AE8">await</span> sequelize.<span style="color:#6DA8FF">authenticate</span>();</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">17</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">listen</span>(PORT, () <span style="color:#B98AE8">=&gt;</span> {</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">18</span><span>  console.<span style="color:#6DA8FF">log</span>(<span style="color:#8FD98F">`NodePilot API on :${PORT}`</span>);</span></div>
+            <div style="display:flex"><span style="width:46px;text-align:right;padding-right:18px;color:#3d434b;flex:none">19</span><span>});</span></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- PREVIEW TAB -->
+        <sc-if value="{{ isPreview }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.05)">
+            <div class="np-hov" style="width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg></div>
+            <div style="flex:1;display:flex;align-items:center;gap:8px;padding:6px 11px;border-radius:8px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);font-family:'JetBrains Mono';font-size:11.5px;color:#969CA4"><span style="color:#30B85C">●</span>localhost:4000<span style="color:#5A616A">/api/users</span></div>
+            <span style="font-size:11px;color:#8FE0AB;background:rgba(48,184,92,.1);border:1px solid rgba(48,184,92,.22);padding:4px 9px;border-radius:7px;font-weight:600">200 OK · 12ms</span>
+          </div>
+          <div style="flex:1;min-height:0;overflow:auto;padding:20px;font-family:'JetBrains Mono';font-size:13px;line-height:1.75;color:#C9CED4">
+            <div style="color:#5A616A">GET /api/users → 200</div>
+            <div style="margin-top:10px"><span style="color:#969CA4">[</span></div>
+            <div style="padding-left:22px"><span style="color:#969CA4">{ </span><span style="color:#9BD1FF">"id"</span>: <span style="color:#E8A13A">1</span>, <span style="color:#9BD1FF">"name"</span>: <span style="color:#8FD98F">"Ada Lovelace"</span>, <span style="color:#9BD1FF">"role"</span>: <span style="color:#8FD98F">"admin"</span> <span style="color:#969CA4">},</span></div>
+            <div style="padding-left:22px"><span style="color:#969CA4">{ </span><span style="color:#9BD1FF">"id"</span>: <span style="color:#E8A13A">2</span>, <span style="color:#9BD1FF">"name"</span>: <span style="color:#8FD98F">"Alan Turing"</span>, <span style="color:#9BD1FF">"role"</span>: <span style="color:#8FD98F">"member"</span> <span style="color:#969CA4">}</span></div>
+            <div><span style="color:#969CA4">]</span></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- TERMINAL TAB -->
+        <sc-if value="{{ isTerminal }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;min-height:0;overflow:auto;padding:14px 16px;font-family:'JetBrains Mono';font-size:12.5px;line-height:1.8;background:rgba(0,0,0,.22)">
+          <div style="display:flex;gap:9px;align-items:baseline;margin-bottom:9px"><span style="color:#E0352A">❯</span><span style="color:#C9CED4">npm run dev</span></div>
+          <div style="color:#5A616A">&gt; nodepilot-api@1.0.0 dev</div>
+          <div style="color:#5A616A">&gt; nodemon src/index.js</div>
+          <div style="color:#7d848c;margin-top:4px">[nodemon] 3.1.0 — watching <span style="color:#969CA4">src/**/*</span></div>
+          <div style="color:#30B85C;margin-top:4px">✔ Sequelize conectado · mysql://localhost:3306/nodepilot</div>
+          <div style="color:#30B85C">✔ NodePilot API escuchando en :4000</div>
+          <div style="margin-top:6px"><span style="color:#6DA8FF">GET</span> <span style="color:#C9CED4">/healthz</span> <span style="color:#30B85C">200</span> <span style="color:#5A616A">12ms</span></div>
+          <div><span style="color:#6DA8FF">GET</span> <span style="color:#C9CED4">/api/users</span> <span style="color:#30B85C">200</span> <span style="color:#5A616A">8ms</span></div>
+          <div style="display:flex;gap:9px;align-items:baseline;margin-top:9px"><span style="color:#E0352A">❯</span><span class="np-caret"></span></div>
+        </div>
+        </sc-if>
+
+        <!-- LOGS TAB -->
+        <sc-if value="{{ isLogs }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;min-height:0;overflow:auto;padding:10px 14px;font-family:'JetBrains Mono';font-size:12px;line-height:1.55">
+          <div style="display:flex;gap:10px;padding:5px 8px;border-radius:6px"><span style="color:#5A616A">10:42:01.221</span><span style="color:#30B85C;font-weight:600;width:46px">INFO</span><span style="color:#C9CED4">Server bootstrap complete</span></div>
+          <div style="display:flex;gap:10px;padding:5px 8px;border-radius:6px;background:rgba(255,255,255,.02)"><span style="color:#5A616A">10:42:01.244</span><span style="color:#6DA8FF;font-weight:600;width:46px">DB</span><span style="color:#C9CED4">Sequelize sync · 4 modelos · 0 alteraciones</span></div>
+          <div style="display:flex;gap:10px;padding:5px 8px;border-radius:6px"><span style="color:#5A616A">10:42:03.910</span><span style="color:#30B85C;font-weight:600;width:46px">HTTP</span><span style="color:#C9CED4">GET /api/users · 200 · 8ms</span></div>
+          <div style="display:flex;gap:10px;padding:5px 8px;border-radius:6px;background:rgba(232,161,58,.06)"><span style="color:#5A616A">10:42:05.118</span><span style="color:#E8A13A;font-weight:600;width:46px">WARN</span><span style="color:#E8C98F">Rate limit cercano · 48/60 req·min</span></div>
+          <div style="display:flex;gap:10px;padding:5px 8px;border-radius:6px"><span style="color:#5A616A">10:42:06.402</span><span style="color:#6DA8FF;font-weight:600;width:46px">JWT</span><span style="color:#C9CED4">Token verificado · sub=usr_2k1</span></div>
+        </div>
+        </sc-if>
+
+        <!-- DATABASE TAB -->
+        <sc-if value="{{ isDb }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px"><span style="color:#969CA4">nodepilot</span><span style="color:#5A616A">›</span><span style="color:#fff;font-weight:600;font-family:'JetBrains Mono'">users</span><span style="margin-left:auto;color:#5A616A;font-size:11px;font-family:'JetBrains Mono'">2 filas · MySQL 8.0</span></div>
+          <div style="flex:1;min-height:0;overflow:auto;font-size:12px;font-family:'JetBrains Mono'">
+            <div style="display:flex;color:#5A616A;border-bottom:1px solid rgba(255,255,255,.06);position:sticky;top:0;background:#0f1216"><span style="flex:0 0 60px;padding:9px 14px">id</span><span style="flex:2;padding:9px 14px">name</span><span style="flex:2;padding:9px 14px">email</span><span style="flex:1;padding:9px 14px">role</span></div>
+            <div class="np-row" style="display:flex;color:#C9CED4;border-bottom:1px solid rgba(255,255,255,.03)"><span style="flex:0 0 60px;padding:9px 14px;color:#E8A13A">1</span><span style="flex:2;padding:9px 14px">Ada Lovelace</span><span style="flex:2;padding:9px 14px;color:#969CA4">ada@np.dev</span><span style="flex:1;padding:9px 14px"><span style="color:#E0352A;background:rgba(224,53,42,.12);padding:2px 8px;border-radius:6px">admin</span></span></div>
+            <div class="np-row" style="display:flex;color:#C9CED4"><span style="flex:0 0 60px;padding:9px 14px;color:#E8A13A">2</span><span style="flex:2;padding:9px 14px">Alan Turing</span><span style="flex:2;padding:9px 14px;color:#969CA4">alan@np.dev</span><span style="flex:1;padding:9px 14px"><span style="color:#969CA4;background:rgba(255,255,255,.05);padding:2px 8px;border-radius:6px">member</span></span></div>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+
+      <!-- RUNNER / CONTROLLER DOCK -->
+      <div style="background:rgba(15,18,22,.9);border:1px solid rgba(255,255,255,.06);border-radius:14px;flex:none;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.35)">
+        <div style="display:flex;align-items:center;gap:6px;padding:7px 8px 7px 10px;border-bottom:1px solid rgba(255,255,255,.06)">
+          <div onClick="{{ setDockTerm }}" class="np-hov" style="{{ sDockTerm }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7l4 4-4 4M12 16h7"></path></svg>Terminal</div>
+          <div onClick="{{ setDockCtrl }}" class="np-hov" style="{{ sDockCtrl }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="6" rx="1.5"></rect><rect x="3" y="14" width="18" height="6" rx="1.5"></rect><path d="M7 7h.01M7 17h.01"></path></svg>Controlador</div>
+          <div style="flex:1"></div>
+          <!-- run controls: sober, not all red -->
+          <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11.5px;font-weight:500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"></path></svg>Instalar</div>
+          <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11.5px;font-weight:500"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path></svg>Compilar</div>
+          <div class="np-lift" style="display:flex;align-items:center;gap:7px;padding:6px 13px;border-radius:8px;cursor:pointer;background:rgba(48,184,92,.14);border:1px solid rgba(48,184,92,.3);color:#8FE0AB;font-size:11.5px;font-weight:600"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"></path></svg>Ejecutar</div>
+          <div class="np-hov" style="display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:8px;cursor:pointer;background:rgba(224,53,42,.12);border:1px solid rgba(224,53,42,.28);color:#F0857C;font-size:11.5px;font-weight:600"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg>Detener</div>
+        </div>
+        <!-- TERMINAL window -->
+        <sc-if value="{{ dockTerminal }}" hint-placeholder-val="{{ true }}">
+        <div style="height:158px;overflow:auto;padding:12px 16px;font-family:'JetBrains Mono';font-size:12px;line-height:1.75;background:rgba(0,0,0,.22)">
+          <div style="display:flex;gap:9px;align-items:baseline;margin-bottom:7px"><span style="color:#E0352A">❯</span><span style="color:#C9CED4">npm run dev</span></div>
+          <div style="color:#5A616A">&gt; nodepilot-api@1.0.0 dev · nodemon src/index.js</div>
+          <div style="color:#30B85C;margin-top:3px">✔ Sequelize conectado · mysql://localhost:3306/nodepilot</div>
+          <div style="color:#30B85C">✔ NodePilot API escuchando en :4000</div>
+          <div style="margin-top:4px"><span style="color:#6DA8FF">GET</span> <span style="color:#C9CED4">/healthz</span> <span style="color:#30B85C">200</span> <span style="color:#5A616A">12ms</span></div>
+          <div><span style="color:#6DA8FF">GET</span> <span style="color:#C9CED4">/api/users</span> <span style="color:#30B85C">200</span> <span style="color:#5A616A">8ms</span></div>
+          <div style="display:flex;gap:9px;align-items:baseline;margin-top:7px"><span style="color:#E0352A">❯</span><span class="np-caret"></span></div>
+        </div>
+        </sc-if>
+        <!-- CONTROLADOR window -->
+        <sc-if value="{{ dockController }}" hint-placeholder-val="{{ true }}">
+        <div style="height:158px;overflow:auto;padding:11px 14px;display:flex;flex-direction:column;gap:8px">
+          <div class="np-lift" style="display:flex;align-items:center;gap:14px;padding:11px 13px;border-radius:11px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07)">
+            <div style="display:flex;align-items:center;gap:9px;flex:1;min-width:0">
+              <span style="width:8px;height:8px;border-radius:50%;background:#30B85C;animation:np-pulse 2.4s ease infinite;flex:none"></span>
+              <span style="font-size:12.5px;color:#fff;font-weight:600">Express</span>
+              <span style="font-family:'JetBrains Mono';font-size:11px;color:#5A616A">pid 24817</span>
+              <span style="font-family:'JetBrains Mono';font-size:11px;color:#6DA8FF;background:rgba(108,168,255,.1);padding:2px 7px;border-radius:6px">:4000</span>
+              <span style="font-size:11px;color:#8FE0AB;background:rgba(48,184,92,.1);border:1px solid rgba(48,184,92,.2);padding:2px 9px;border-radius:20px;font-weight:600">activo</span>
+            </div>
+            <div style="display:flex;gap:18px">
+              <div style="text-align:right"><div style="font-family:'JetBrains Mono';font-size:13px;color:#C9CED4;font-weight:600">38&nbsp;MB</div><div style="font-size:10px;color:#5A616A;letter-spacing:.04em">MEMORIA</div></div>
+              <div style="text-align:right"><div style="font-family:'JetBrains Mono';font-size:13px;color:#C9CED4;font-weight:600">2.4%</div><div style="font-size:10px;color:#5A616A;letter-spacing:.04em">CPU</div></div>
+              <div style="text-align:right"><div style="font-family:'JetBrains Mono';font-size:13px;color:#C9CED4;font-weight:600">4m&nbsp;12s</div><div style="font-size:10px;color:#5A616A;letter-spacing:.04em">UPTIME</div></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px;padding:10px 13px;border-radius:11px;background:rgba(255,255,255,.015);border:1px solid rgba(255,255,255,.05)">
+            <div style="display:flex;align-items:center;gap:9px;flex:1;min-width:0">
+              <span style="width:8px;height:8px;border-radius:50%;background:#5A616A;flex:none"></span>
+              <span style="font-size:12.5px;color:#C9CED4;font-weight:600">Webpack dev</span>
+              <span style="font-family:'JetBrains Mono';font-size:11px;color:#5A616A">pid 24820</span>
+              <span style="font-family:'JetBrains Mono';font-size:11px;color:#969CA4;background:rgba(255,255,255,.05);padding:2px 7px;border-radius:6px">:5173</span>
+              <span style="font-size:11px;color:#969CA4;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:2px 9px;border-radius:20px;font-weight:600">inactivo</span>
+            </div>
+            <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11px;font-weight:600"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"></path></svg>Iniciar</div>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <!-- RIGHT AI PANEL -->
+    <div style="width:384px;flex:none;background:rgba(18,21,25,.9);border:1px solid rgba(255,255,255,.06);border-radius:14px;display:flex;flex-direction:column;min-height:0;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.4)">
+      <!-- header -->
+      <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:9px">
+          <div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(150deg,#E0352A,#9E1B14);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(224,53,42,.35)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z"></path></svg></div>
+          <div><div style="font-weight:600;font-size:13px">Asistente Node.js</div><div style="font-size:10.5px;color:#5A616A">DeepSeek V4</div></div>
+        </div>
+        <!-- model toggle -->
+        <div style="display:flex;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:2px">
+          <div onClick="{{ setFlash }}" style="{{ sFlash }}">Flash</div>
+          <div onClick="{{ setPro }}" style="{{ sPro }}">Pro</div>
+        </div>
+      </div>
+      <!-- context chip -->
+      <div style="padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:8px;font-size:11px">
+        <span style="color:#5A616A">Contexto</span>
+        <span style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:3px 9px;border-radius:7px;font-family:'JetBrains Mono';color:#C9CED4"><span style="color:#E8A13A;font-size:9px">JS</span>src/index.js</span>
+        <span style="color:#5A616A;margin-left:auto;font-family:'JetBrains Mono'">3.4k tokens</span>
+      </div>
+      <!-- conversation -->
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:16px">
+        <!-- user msg -->
+        <div class="np-msg" style="align-self:flex-end;max-width:86%;background:rgba(224,53,42,.12);border:1px solid rgba(224,53,42,.2);padding:9px 12px;border-radius:13px 13px 4px 13px;font-size:12.5px;line-height:1.55;color:#F2D6D3">Crea una API REST de usuarios con Express y Sequelize.</div>
+        <!-- assistant msg -->
+        <div class="np-msg" style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:12.5px;line-height:1.6;color:#C9CED4">Listo. Generé el modelo, el router y conecté las rutas en <span style="font-family:'JetBrains Mono';font-size:11px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:5px;color:#E8A13A">index.js</span>. Validé con ESLint sin errores.</div>
+          <!-- generated files card -->
+          <div class="np-lift" style="border:1px solid rgba(255,255,255,.08);border-radius:11px;overflow:hidden;background:rgba(0,0,0,.25)">
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#969CA4" stroke-width="1.7"><path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path></svg><span style="font-size:11.5px;font-weight:600;color:#C9CED4">Archivos generados</span><span style="margin-left:auto;font-family:'JetBrains Mono';font-size:10px;color:#30B85C">+2</span></div>
+            <div style="padding:4px 0">
+              <div style="display:flex;align-items:center;gap:9px;padding:6px 12px;font-family:'JetBrains Mono';font-size:11.5px"><span style="color:#30B85C">+</span><span style="color:#E8A13A;font-size:9px">JS</span><span style="color:#C9CED4">db/User.js</span><span style="margin-left:auto;color:#5A616A">42 líneas</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:6px 12px;font-family:'JetBrains Mono';font-size:11.5px"><span style="color:#30B85C">+</span><span style="color:#E8A13A;font-size:9px">JS</span><span style="color:#C9CED4">routes/users.js</span><span style="margin-left:auto;color:#5A616A">58 líneas</span></div>
+            </div>
+          </div>
+          <!-- mini code -->
+          <div style="border:1px solid rgba(255,255,255,.07);border-radius:11px;overflow:hidden;background:rgba(0,0,0,.3)">
+            <div style="padding:5px 11px;border-bottom:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono';font-size:10px;color:#5A616A;display:flex;align-items:center;gap:6px">routes/users.js<span style="margin-left:auto;cursor:pointer;color:#969CA4">copiar</span></div>
+            <div style="padding:10px 12px;font-family:'JetBrains Mono';font-size:11px;line-height:1.7;overflow:auto">
+              <div><span style="color:#B98AE8">const</span> router = express.<span style="color:#6DA8FF">Router</span>();</div>
+              <div>router.<span style="color:#6DA8FF">get</span>(<span style="color:#8FD98F">'/'</span>, <span style="color:#B98AE8">async</span> (req,res)<span style="color:#B98AE8">=&gt;</span>{</div>
+              <div>  <span style="color:#B98AE8">const</span> users = <span style="color:#B98AE8">await</span> User.<span style="color:#6DA8FF">findAll</span>();</div>
+              <div>  res.<span style="color:#6DA8FF">json</span>(users);</div>
+              <div>});</div>
+            </div>
+          </div>
+          <!-- suggested actions -->
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <div class="np-lift" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;background:rgba(48,184,92,.13);border:1px solid rgba(48,184,92,.28);color:#8FE0AB;font-size:11.5px;font-weight:600;cursor:pointer"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"></path></svg>Aplicar cambios</div>
+            <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11.5px;font-weight:500;cursor:pointer">Ejecutar tests</div>
+            <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11.5px;font-weight:500;cursor:pointer">Explicar</div>
+          </div>
+        </div>
+        <sc-for list="{{ extraMsgs }}" as="m" hint-placeholder-count="0">
+          <div class="np-msg" style="align-self:flex-end;max-width:86%;background:rgba(224,53,42,.12);border:1px solid rgba(224,53,42,.2);padding:9px 12px;border-radius:13px 13px 4px 13px;font-size:12.5px;line-height:1.55;color:#F2D6D3">{{ m.text }}</div>
+        </sc-for>
+      </div>
+      <!-- input -->
+      <div style="padding:11px 12px;border-top:1px solid rgba(255,255,255,.06)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px;padding-left:2px">
+          <span onClick="{{ toggleAttach }}" style="{{ sAttach }}"><span style="{{ sAttachKnob }}"></span></span>
+          <span style="font-size:11px;color:#969CA4">Adjuntar archivo abierto</span>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:8px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:8px 8px 8px 12px">
+          <textarea value="{{ chat }}" onInput="{{ onChat }}" placeholder="Escribe tu petición… (⌘↵ para enviar)" rows="1" style="flex:1;background:transparent;border:none;outline:none;resize:none;color:#E8EAED;font-family:'Inter';font-size:12.5px;line-height:1.5;max-height:90px"></textarea>
+          <div onClick="{{ send }}" class="np-lift" style="width:32px;height:32px;flex:none;border-radius:9px;background:linear-gradient(150deg,#E0352A,#B0211A);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 10px rgba(224,53,42,.35)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"></path></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ VARIATION B placeholder ============ -->
+  <sc-if value="{{ isB }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;min-height:0;display:flex;overflow:hidden">
+
+    <!-- ACTIVITY RAIL -->
+    <div style="width:52px;flex:none;border-right:1px solid rgba(255,255,255,.06);background:rgba(13,15,18,.6);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px">
+      <div class="np-hov" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;background:rgba(255,255,255,.06);box-shadow:inset 2px 0 0 #E0352A;position:relative"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
+      <div class="np-hov" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg></div>
+      <div class="np-hov" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4;position:relative"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="6" cy="6" r="2.5"></circle><circle cx="6" cy="18" r="2.5"></circle><circle cx="18" cy="9" r="2.5"></circle><path d="M6 8.5v7M18 11.5c0 3-3 3.5-6 3.5"></path></svg><span style="position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:#E8A13A"></span></div>
+      <div class="np-hov" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"></path></svg></div>
+      <div style="flex:1"></div>
+      <div class="np-hov" style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#969CA4"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"></path></svg></div>
+    </div>
+
+    <!-- FILE PANEL -->
+    <div style="width:236px;flex:none;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;min-height:0;background:rgba(12,14,17,.4)">
+      <div style="padding:11px 13px 9px;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:#969CA4;text-transform:uppercase">NavyProject</span>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:#5A616A;border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:1px 5px">⌘K</span>
+      </div>
+      <div style="padding:0 8px;overflow-y:auto;flex:1;min-height:0">
+        <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;cursor:pointer;font-weight:500"><span style="color:#5A616A;font-size:9px">▾</span><svg width="14" height="14" viewBox="0 0 24 24" fill="#3a4654"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span style="color:#C9CED4">src</span></div>
+        <div style="margin-left:13px;border-left:1px solid rgba(255,255,255,.06);padding-left:4px">
+          <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;cursor:pointer"><span style="color:#5A616A;font-size:9px">▾</span><svg width="13" height="13" viewBox="0 0 24 24" fill="#3a4654"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span style="color:#969CA4">routes</span></div>
+          <div style="margin-left:13px;border-left:1px solid rgba(255,255,255,.06);padding-left:4px"><div class="np-row" style="display:flex;align-items:center;gap:7px;padding:4.5px 8px;border-radius:7px;cursor:pointer"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="color:#969CA4">users.js</span><span style="margin-left:auto;font-family:'JetBrains Mono';font-size:9px;color:#30B85C">M</span></div></div>
+          <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:4.5px 8px;border-radius:7px;cursor:pointer"><span style="color:#5A616A;font-size:9px">▸</span><svg width="13" height="13" viewBox="0 0 24 24" fill="#3a4654"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span style="color:#969CA4">db</span></div>
+          <div style="display:flex;align-items:center;gap:7px;padding:4.5px 8px;border-radius:7px;cursor:pointer;background:rgba(224,53,42,.13);box-shadow:inset 2px 0 0 #E0352A"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="color:#fff;font-weight:600">index.js</span></div>
+        </div>
+        <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;cursor:pointer;margin-top:1px"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#6DA8FF">{}</span><span style="color:#969CA4">package.json</span></div>
+        <div class="np-row" style="display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;cursor:pointer"><span style="width:9px"></span><span style="font-family:'JetBrains Mono';font-size:9px;color:#969CA4">md</span><span style="color:#969CA4">README.md</span></div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,.06);padding:9px 13px;display:flex;align-items:center;gap:8px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6DA8FF" stroke-width="1.7"><circle cx="6" cy="6" r="2.5"></circle><circle cx="6" cy="18" r="2.5"></circle><circle cx="18" cy="9" r="2.5"></circle><path d="M6 8.5v7M18 11.5c0 3-3 3.5-6 3.5"></path></svg>
+        <span style="font-size:11.5px;color:#C9CED4;font-weight:500">main</span>
+        <span style="font-family:'JetBrains Mono';font-size:10px;color:#30B85C;margin-left:auto">+2 −0</span>
+      </div>
+    </div>
+
+    <!-- CENTER -->
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:0">
+      <!-- browser-style tabs + command bar -->
+      <div style="display:flex;align-items:stretch;height:42px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(10,12,15,.5)">
+        <div style="display:flex;align-items:center;gap:8px;padding:0 14px;border-right:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.04);box-shadow:inset 0 -2px 0 #E0352A;border-radius:0"><span style="font-family:'JetBrains Mono';font-size:9px;color:#E8A13A">JS</span><span style="font-size:12.5px;color:#fff;font-weight:500">index.js</span><span style="color:#5A616A;font-size:14px;margin-left:6px;cursor:pointer">×</span></div>
+        <div class="np-hov" style="display:flex;align-items:center;gap:8px;padding:0 14px;border-right:1px solid rgba(255,255,255,.06);cursor:pointer"><span style="width:6px;height:6px;border-radius:50%;background:#30B85C"></span><span style="font-size:12.5px;color:#969CA4">users.js</span></div>
+        <div class="np-hov" style="display:flex;align-items:center;padding:0 13px;border-right:1px solid rgba(255,255,255,.06);cursor:pointer;color:#5A616A"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 14px">
+          <div class="np-hov" style="display:flex;align-items:center;gap:10px;width:min(420px,100%);padding:6px 12px;border-radius:9px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);cursor:text">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5A616A" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+            <span style="color:#5A616A;font-size:12px;flex:1">Buscar o ejecutar comando…</span>
+            <span style="font-family:'JetBrains Mono';font-size:10px;color:#5A616A">⌘P</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;padding:0 12px">
+          <div onClick="{{ tabPreview }}" class="np-hov" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;cursor:pointer;color:#969CA4;font-size:11.5px;font-weight:500;border:1px solid rgba(255,255,255,.07)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"></rect></svg>Vista previa</div>
+        </div>
+      </div>
+
+      <!-- editor -->
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:6px;padding:7px 18px;font-size:11.5px;color:#5A616A;border-bottom:1px solid rgba(255,255,255,.04)"><span>src</span><span style="opacity:.5">›</span><span style="color:#969CA4">index.js</span><span style="margin-left:auto;font-family:'JetBrains Mono';font-size:10.5px;color:#5A616A">JavaScript · LF · UTF-8</span></div>
+        <div style="flex:1;min-height:0;overflow:auto;padding:12px 0;font-family:'JetBrains Mono';font-size:13px;line-height:1.85">
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">1</span><span><span style="color:#B98AE8">import</span> express <span style="color:#B98AE8">from</span> <span style="color:#8FD98F">'express'</span>;</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">2</span><span><span style="color:#B98AE8">import</span> { sequelize } <span style="color:#B98AE8">from</span> <span style="color:#8FD98F">'./db/connection.js'</span>;</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">3</span><span><span style="color:#B98AE8">import</span> usersRouter <span style="color:#B98AE8">from</span> <span style="color:#8FD98F">'./routes/users.js'</span>;</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">4</span><span></span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">5</span><span><span style="color:#B98AE8">const</span> <span style="color:#C9CED4">app</span> = <span style="color:#6DA8FF">express</span>();</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">6</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">use</span>(express.<span style="color:#6DA8FF">json</span>());</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">7</span><span></span></div>
+          <div style="display:flex;background:rgba(255,255,255,.025)"><span style="width:48px;text-align:right;padding-right:18px;color:#5A616A;flex:none">8</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">use</span>(<span style="color:#8FD98F">'/api/users'</span>, usersRouter);<span class="np-caret"></span></span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">9</span><span></span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">10</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">get</span>(<span style="color:#8FD98F">'/healthz'</span>, (req, res) <span style="color:#B98AE8">=&gt;</span> {</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">11</span><span>  res.<span style="color:#6DA8FF">json</span>({ status: <span style="color:#8FD98F">'ok'</span>, uptime: process.<span style="color:#6DA8FF">uptime</span>() });</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">12</span><span>});</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">13</span><span></span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">14</span><span><span style="color:#B98AE8">const</span> <span style="color:#C9CED4">PORT</span> = process.env.PORT <span style="color:#B98AE8">??</span> <span style="color:#E8A13A">4000</span>;</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">15</span><span></span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">16</span><span><span style="color:#B98AE8">await</span> sequelize.<span style="color:#6DA8FF">authenticate</span>();</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">17</span><span><span style="color:#C9CED4">app</span>.<span style="color:#6DA8FF">listen</span>(PORT, () <span style="color:#B98AE8">=&gt;</span> {</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">18</span><span>  console.<span style="color:#6DA8FF">log</span>(<span style="color:#8FD98F">`NodePilot API on :${PORT}`</span>);</span></div>
+          <div style="display:flex"><span style="width:48px;text-align:right;padding-right:18px;color:#3d434b;flex:none">19</span><span>});</span></div>
+        </div>
+      </div>
+
+      <!-- WARP TERMINAL DOCK -->
+      <div style="height:212px;flex:none;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;background:rgba(7,8,10,.6)">
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.05)">
+          <div style="display:flex;align-items:center;gap:7px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#969CA4" stroke-width="2"><path d="M5 7l4 4-4 4M12 16h7"></path></svg><span style="font-size:11.5px;font-weight:600;color:#C9CED4">Terminal</span></div>
+          <span style="font-family:'JetBrains Mono';font-size:11px;color:#5A616A">workspace/navy-project</span>
+          <div style="flex:1"></div>
+          <div style="display:flex;align-items:center;gap:7px">
+            <div class="np-hov" style="padding:5px 10px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11px;font-weight:500;cursor:pointer">Instalar</div>
+            <div class="np-hov" style="padding:5px 10px;border-radius:7px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11px;font-weight:500;cursor:pointer">Compilar</div>
+            <div class="np-lift" style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:7px;background:rgba(48,184,92,.14);border:1px solid rgba(48,184,92,.3);color:#8FE0AB;font-size:11px;font-weight:600;cursor:pointer"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8z"></path></svg>Ejecutar</div>
+            <div class="np-hov" style="display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:7px;background:rgba(224,53,42,.12);border:1px solid rgba(224,53,42,.28);color:#F0857C;font-size:11px;font-weight:600;cursor:pointer"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg>Detener</div>
+          </div>
+        </div>
+        <div style="flex:1;min-height:0;overflow:auto;padding:12px 16px;font-family:'JetBrains Mono';font-size:12px;line-height:1.7">
+          <!-- warp block -->
+          <div style="border:1px solid rgba(255,255,255,.07);border-radius:9px;overflow:hidden;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:9px;padding:6px 11px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05)"><span style="color:#E0352A">❯</span><span style="color:#C9CED4">npm run dev</span><span style="margin-left:auto;display:flex;align-items:center;gap:5px;color:#8FE0AB;font-size:10px"><span style="width:5px;height:5px;border-radius:50%;background:#30B85C;animation:np-pulse 2.4s ease infinite"></span>en ejecución · 4.2s</span></div>
+            <div style="padding:9px 12px">
+              <div style="color:#7d848c">[nodemon] watching <span style="color:#969CA4">src/**/*</span></div>
+              <div style="color:#30B85C">✔ Sequelize conectado · mysql://localhost:3306/nodepilot</div>
+              <div style="color:#30B85C">✔ NodePilot API escuchando en :4000</div>
+              <div style="margin-top:3px"><span style="color:#6DA8FF">GET</span> <span style="color:#C9CED4">/api/users</span> <span style="color:#30B85C">200</span> <span style="color:#5A616A">8ms</span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:9px;align-items:baseline"><span style="color:#E0352A">❯</span><span class="np-caret"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT AI PANEL (flat) -->
+    <div style="width:362px;flex:none;border-left:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;min-height:0;background:rgba(13,15,18,.5)">
+      <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:9px">
+          <div style="width:26px;height:26px;border-radius:8px;background:linear-gradient(150deg,#E0352A,#9E1B14);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(224,53,42,.35)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z"></path></svg></div>
+          <div><div style="font-weight:600;font-size:13px">Asistente Node.js</div><div style="font-size:10.5px;color:#5A616A">DeepSeek V4 · Pro</div></div>
+        </div>
+        <div style="display:flex;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:2px">
+          <div onClick="{{ setFlash }}" style="{{ sFlash }}">Flash</div>
+          <div onClick="{{ setPro }}" style="{{ sPro }}">Pro</div>
+        </div>
+      </div>
+      <!-- project status row -->
+      <div style="display:flex;gap:8px;padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.05)">
+        <div style="flex:1;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:8px 10px"><div style="font-size:9.5px;color:#5A616A;letter-spacing:.05em;text-transform:uppercase">Tests</div><div style="font-size:14px;font-weight:600;color:#8FE0AB;font-family:'JetBrains Mono'">18/18</div></div>
+        <div style="flex:1;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:8px 10px"><div style="font-size:9.5px;color:#5A616A;letter-spacing:.05em;text-transform:uppercase">Lint</div><div style="font-size:14px;font-weight:600;color:#C9CED4;font-family:'JetBrains Mono'">0 ⚠</div></div>
+        <div style="flex:1;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:8px 10px"><div style="font-size:9.5px;color:#5A616A;letter-spacing:.05em;text-transform:uppercase">Deploy</div><div style="font-size:14px;font-weight:600;color:#C9CED4;font-family:'JetBrains Mono'">listo</div></div>
+      </div>
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:16px">
+        <div class="np-msg" style="align-self:flex-end;max-width:86%;background:rgba(224,53,42,.12);border:1px solid rgba(224,53,42,.2);padding:9px 12px;border-radius:13px 13px 4px 13px;font-size:12.5px;line-height:1.55;color:#F2D6D3">Crea una API REST de usuarios con Express y Sequelize.</div>
+        <div class="np-msg" style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:12.5px;line-height:1.6;color:#C9CED4">Generé el modelo y el router, y los enlacé en <span style="font-family:'JetBrains Mono';font-size:11px;background:rgba(255,255,255,.06);padding:1px 5px;border-radius:5px;color:#E8A13A">index.js</span>. ESLint sin errores.</div>
+          <div class="np-lift" style="border:1px solid rgba(255,255,255,.08);border-radius:11px;overflow:hidden;background:rgba(0,0,0,.25)">
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#969CA4" stroke-width="1.7"><path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path></svg><span style="font-size:11.5px;font-weight:600;color:#C9CED4">Cambios propuestos</span><span style="margin-left:auto;font-family:'JetBrains Mono';font-size:10px;color:#30B85C">+2</span></div>
+            <div style="padding:4px 0">
+              <div style="display:flex;align-items:center;gap:9px;padding:6px 12px;font-family:'JetBrains Mono';font-size:11.5px"><span style="color:#30B85C">+</span><span style="color:#C9CED4">db/User.js</span><span style="margin-left:auto;color:#5A616A">42</span></div>
+              <div style="display:flex;align-items:center;gap:9px;padding:6px 12px;font-family:'JetBrains Mono';font-size:11.5px"><span style="color:#30B85C">+</span><span style="color:#C9CED4">routes/users.js</span><span style="margin-left:auto;color:#5A616A">58</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <div class="np-lift" style="display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:8px;background:rgba(48,184,92,.13);border:1px solid rgba(48,184,92,.28);color:#8FE0AB;font-size:11.5px;font-weight:600;cursor:pointer"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L20 7"></path></svg>Aplicar cambios</div>
+            <div class="np-hov" style="padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11.5px;font-weight:500;cursor:pointer">Ver diff</div>
+            <div class="np-hov" style="padding:6px 11px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:#C9CED4;font-size:11.5px;font-weight:500;cursor:pointer">Tests</div>
+          </div>
+        </div>
+        <sc-for list="{{ extraMsgs }}" as="m" hint-placeholder-count="0">
+          <div class="np-msg" style="align-self:flex-end;max-width:86%;background:rgba(224,53,42,.12);border:1px solid rgba(224,53,42,.2);padding:9px 12px;border-radius:13px 13px 4px 13px;font-size:12.5px;line-height:1.55;color:#F2D6D3">{{ m.text }}</div>
+        </sc-for>
+      </div>
+      <div style="padding:11px 12px;border-top:1px solid rgba(255,255,255,.06)">
+        <div style="display:flex;align-items:flex-end;gap:8px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:8px 8px 8px 12px">
+          <textarea value="{{ chat }}" onInput="{{ onChat }}" placeholder="Pregunta o pide código…" rows="1" style="flex:1;background:transparent;border:none;outline:none;resize:none;color:#E8EAED;font-family:'Inter';font-size:12.5px;line-height:1.5;max-height:90px"></textarea>
+          <div onClick="{{ send }}" class="np-lift" style="width:32px;height:32px;flex:none;border-radius:9px;background:linear-gradient(150deg,#E0352A,#B0211A);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 10px rgba(224,53,42,.35)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"></path></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ============ FLOATING VARIATION SWITCHER ============ -->
+  <div style="position:fixed;bottom:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:3px;background:rgba(20,23,28,.82);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:4px;box-shadow:0 10px 40px rgba(0,0,0,.5);z-index:50">
+    <div onClick="{{ varA }}" style="{{ sVarA }}"><span style="width:6px;height:6px;border-radius:2px;background:currentColor;opacity:.8"></span>Paneles flotantes</div>
+    <div onClick="{{ varB }}" style="{{ sVarB }}"><span style="width:6px;height:6px;border-radius:2px;background:currentColor;opacity:.8"></span>Workspace unificado</div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { variation: 'A', tab: 'code', dockTab: 'terminal', model: 'flash', attach: false, chat: '', extraMsgs: [] };
+
+  dockStyle(t){
+    const on = this.state.dockTab === t;
+    return { display:'flex', alignItems:'center', gap:'7px', padding:'5px 11px', borderRadius:'8px',
+      cursor:'pointer', fontSize:'11.5px', fontWeight: on?'600':'500',
+      color: on?'#fff':'#969CA4', background: on?'rgba(255,255,255,.06)':'transparent',
+      boxShadow: on?'inset 0 0 0 1px rgba(255,255,255,.08)':'none', transition:'all .16s ease' };
+  }
+
+  tabStyle(t){
+    const on = this.state.tab === t;
+    return {
+      display:'flex', alignItems:'center', gap:'7px', padding:'6px 12px', borderRadius:'9px',
+      cursor:'pointer', fontSize:'12px', fontWeight: on?'600':'500',
+      color: on?'#fff':'#969CA4',
+      background: on?'rgba(255,255,255,.06)':'transparent',
+      boxShadow: on?'inset 0 0 0 1px rgba(255,255,255,.08)':'none'
+    };
+  }
+  modelStyle(m){
+    const on = this.state.model === m;
+    return { padding:'4px 13px', borderRadius:'7px', fontSize:'11px', fontWeight:'600', cursor:'pointer',
+      color: on?'#fff':'#5A616A', background: on?'rgba(224,53,42,.85)':'transparent',
+      boxShadow: on?'0 1px 6px rgba(224,53,42,.4)':'none', transition:'all .16s ease' };
+  }
+  varStyle(v){
+    const on = this.state.variation === v;
+    return { display:'flex', alignItems:'center', gap:'8px', padding:'7px 15px', borderRadius:'10px',
+      fontSize:'12px', fontWeight:'600', cursor:'pointer', transition:'all .18s ease',
+      color: on?'#fff':'#7d848c', background: on?'rgba(224,53,42,.16)':'transparent',
+      boxShadow: on?'inset 0 0 0 1px rgba(224,53,42,.3)':'none' };
+  }
+
+  renderVals(){
+    const s = this.state;
+    return {
+      isA: s.variation==='A', isB: s.variation==='B',
+      isCode: s.tab==='code', isPreview: s.tab==='preview', isTerminal: s.tab==='terminal', isLogs: s.tab==='logs', isDb: s.tab==='database',
+      sCode:this.tabStyle('code'), sPreview:this.tabStyle('preview'), sTerminal:this.tabStyle('terminal'), sLogs:this.tabStyle('logs'), sDb:this.tabStyle('database'),
+      tabCode:()=>this.setState({tab:'code'}), tabPreview:()=>this.setState({tab:'preview'}), tabTerminal:()=>this.setState({tab:'terminal'}), tabLogs:()=>this.setState({tab:'logs'}), tabDb:()=>this.setState({tab:'database'}),
+      dockTerminal: s.dockTab==='terminal', dockController: s.dockTab==='controller',
+      sDockTerm:this.dockStyle('terminal'), sDockCtrl:this.dockStyle('controller'),
+      setDockTerm:()=>this.setState({dockTab:'terminal'}), setDockCtrl:()=>this.setState({dockTab:'controller'}),
+      sFlash:this.modelStyle('flash'), sPro:this.modelStyle('pro'),
+      setFlash:()=>this.setState({model:'flash'}), setPro:()=>this.setState({model:'pro'}),
+      sVarA:this.varStyle('A'), sVarB:this.varStyle('B'),
+      varA:()=>this.setState({variation:'A'}), varB:()=>this.setState({variation:'B'}),
+      chat:s.chat, onChat:(e)=>this.setState({chat:e.target.value}),
+      extraMsgs:s.extraMsgs,
+      send:()=>{ const t=s.chat.trim(); if(!t) return; this.setState({chat:'', extraMsgs:[...s.extraMsgs,{text:t}]}); },
+      toggleAttach:()=>this.setState({attach:!s.attach}),
+      sAttach:{ width:'30px', height:'17px', borderRadius:'20px', cursor:'pointer', flex:'none', position:'relative', transition:'background .18s ease', background: s.attach?'rgba(224,53,42,.85)':'rgba(255,255,255,.12)' },
+      sAttachKnob:{ position:'absolute', top:'2px', left: s.attach?'15px':'2px', width:'13px', height:'13px', borderRadius:'50%', background:'#fff', transition:'left .18s ease', boxShadow:'0 1px 3px rgba(0,0,0,.4)' }
+    };
+  }
+}
+</script>
+</body>
+</html>

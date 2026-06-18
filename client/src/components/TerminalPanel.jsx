@@ -4,7 +4,7 @@ import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
 import { api } from '../api';
 
-export default function TerminalPanel({ project }) {
+export default function TerminalPanel({ project, active = true }) {
   const elRef = useRef(null);
   const termRef = useRef(null);
   const fitRef = useRef(null);
@@ -15,10 +15,22 @@ export default function TerminalPanel({ project }) {
   useEffect(() => {
     const term = new Terminal({
       convertEol: true, // trata \n como \r\n (evita el efecto escalera)
-      fontSize: 13,
-      cursorBlink: false,
+      fontSize: 12.5,
+      fontFamily: "'JetBrains Mono', monospace",
+      lineHeight: 1.3,
+      cursorBlink: true,
       disableStdin: true,
-      theme: { background: '#1e1e1e', foreground: '#e0e0e0' },
+      theme: {
+        background: '#0a0c0f',
+        foreground: '#c9ced4',
+        cursor: '#e0352a',
+        selectionBackground: 'rgba(224,53,42,.25)',
+        green: '#30b85c',
+        brightGreen: '#8fe0ab',
+        blue: '#6da8ff',
+        yellow: '#e8a13a',
+        red: '#e0352a',
+      },
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -110,8 +122,9 @@ export default function TerminalPanel({ project }) {
     };
   }, [project]);
 
-  // Reajusta el tamaño al montar (el contenedor ya existe).
+  // Reajusta el tamaño al montar o al volver a la pestaña Terminal.
   useEffect(() => {
+    if (!active) return;
     const t = setTimeout(() => {
       try {
         fitRef.current?.fit();
@@ -120,7 +133,7 @@ export default function TerminalPanel({ project }) {
       }
     }, 50);
     return () => clearTimeout(t);
-  }, [project]);
+  }, [project, active]);
 
   const run = async (action) => {
     if (!project) return;
@@ -152,34 +165,46 @@ export default function TerminalPanel({ project }) {
 
   return (
     <div className="d-flex flex-column h-100">
-      <div className="d-flex align-items-center gap-2 px-2 py-1 bg-dark text-white border-bottom">
-        <span className="small fw-semibold me-2">Terminal</span>
-        <div className="btn-group btn-group-sm">
-          <button className="btn btn-outline-light" disabled={disabled} onClick={() => run('install')}>
-            Instalar
-          </button>
-          <button className="btn btn-outline-light" disabled={disabled} onClick={() => run('build')}>
-            Compilar
-          </button>
-          <button className="btn btn-success" disabled={disabled} onClick={() => run('start')}>
-            ▶ Ejecutar
-          </button>
-        </div>
-        <button className="btn btn-sm btn-danger" disabled={!status.running} onClick={stop}>
-          ■ Detener
-        </button>
-        <span className="ms-auto small">
+      <div className="d-flex align-items-center" style={{ gap: 8, padding: '8px 10px', borderBottom: '1px solid var(--border)' }}>
+        <span className="ms-1">
           {status.running ? (
-            <span className="badge bg-success">
+            <span className="np-pill np-pill--green">
               ▶ {status.action}
               {status.port ? ` · :${status.port}` : ''}
             </span>
           ) : (
-            <span className="badge bg-secondary">detenido</span>
+            <span className="np-pill np-pill--idle">detenido</span>
           )}
         </span>
+        {/* Controles sobrios; sólo Ejecutar es verde y Detener rojo (regla de marca). */}
+        <div className="ms-auto d-flex align-items-center" style={{ gap: 6 }}>
+          <button className="np-btn" disabled={disabled} onClick={() => run('install')}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />
+            </svg>
+            Instalar
+          </button>
+          <button className="np-btn" disabled={disabled} onClick={() => run('build')}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+            </svg>
+            Compilar
+          </button>
+          <button className="np-btn np-btn--green np-lift" disabled={disabled} onClick={() => run('start')}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 4l14 8-14 8z" />
+            </svg>
+            Ejecutar
+          </button>
+          <button className="np-btn np-btn--red" disabled={!status.running} onClick={stop}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="5" y="5" width="14" height="14" rx="2" />
+            </svg>
+            Detener
+          </button>
+        </div>
       </div>
-      <div ref={elRef} className="flex-grow-1" style={{ overflow: 'hidden', background: '#1e1e1e' }} />
+      <div ref={elRef} className="np-terminal flex-grow-1" />
     </div>
   );
 }

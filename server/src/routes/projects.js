@@ -98,6 +98,18 @@ router.get('/commands', (req, res) => {
   res.json({ commands: processManager.listCommands() });
 });
 
+// Controlador: todos los procesos activos de todos los proyectos (F3).
+router.get('/processes', (req, res) => {
+  res.json({ processes: processManager.listAll() });
+});
+
+router.post(
+  '/projects/:id/restart',
+  wrap(async (req, res) => {
+    res.json(await processManager.restart(req.params.id));
+  })
+);
+
 router.post(
   '/projects/:id/run',
   wrap(async (req, res) => {

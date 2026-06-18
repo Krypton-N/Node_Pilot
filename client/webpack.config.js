@@ -22,6 +22,10 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
@@ -34,11 +38,17 @@ module.exports = {
     open: true,
     hot: true,
     historyApiFallback: true,
+    // Overlay solo para errores de compilación. Los errores de runtime
+    // cross-origin (Monaco/CDN) llegan como "Script error." sin traza útil y
+    // taparían toda la UI; los dejamos en la consola, no en pantalla completa.
+    client: {
+      overlay: { errors: true, warnings: false, runtimeErrors: false },
+    },
     // El front consume el backend Express sin lidiar con CORS:
     // todo lo que vaya a /healthz o /api se reenvía al puerto 3001.
     proxy: [
       {
-        context: ['/healthz', '/api'],
+        context: ['/healthz', '/api', '/preview'],
         target: 'http://localhost:3001',
       },
       {

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from './api';
 import FileTree from './components/FileTree';
-import EditorPane from './components/EditorPane';
-import TerminalPanel from './components/TerminalPanel';
+import logoImg from './assets/logo.jpg';
+import MainTabs from './components/MainTabs';
+import BottomPanel from './components/BottomPanel';
+import AssistantPanel from './components/AssistantPanel';
 import NewProjectModal from './components/NewProjectModal';
 import './app.css';
 
@@ -129,79 +131,136 @@ export default function App() {
     }
   }
 
+  const backendState =
+    backendOk == null ? 'idle' : backendOk ? 'green' : 'red';
+
   return (
-    <div className="d-flex flex-column vh-100">
-      {/* Header */}
-      <header className="d-flex align-items-center gap-3 px-3 py-2 bg-dark text-white">
-        <span className="fw-bold fs-5">NodePilot</span>
-        <span className="badge bg-secondary">Fase 2 — Ejecución</span>
-        <span className="ms-auto small">
-          backend:{' '}
-          <span className={`badge bg-${backendOk == null ? 'secondary' : backendOk ? 'success' : 'danger'}`}>
-            {backendOk == null ? '…' : backendOk ? 'ok' : 'down'}
-          </span>
-        </span>
-      </header>
+    <div className="np-app">
+      {/* ============ BARRA SUPERIOR ============ */}
+      <div className="np-topbar">
+        <div className="d-flex align-items-center" style={{ gap: 14 }}>
+          <div className="d-flex align-items-center" style={{ gap: 9 }}>
+            <img src={logoImg} alt="NodePilot Logo" style={{ width: 25, height: 25, borderRadius: 8, objectFit: 'cover' }} />
+            <span className="np-wordmark">NodePilot</span>
+          </div>
+          <div className="np-divider" />
+          {/* selector de proyecto (lógica real conservada) */}
+          <div className="np-project np-hov">
+            <div className="np-project-swatch" />
+            <select value={project} onChange={(e) => selectProject(e.target.value)}>
+              {projects.length === 0 && <option value="">(sin proyectos)</option>}
+              {projects.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            className="np-mini-btn np-hov"
+            title="Nuevo proyecto"
+            onClick={() => setShowNew(true)}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="d-flex align-items-center" style={{ gap: 8 }}>
+          <div className={`np-chip ${backendState === 'green' ? 'np-chip--green' : backendState === 'red' ? 'np-chip--red' : ''}`}>
+            <span className={`np-dot np-dot--${backendState === 'green' ? 'green' : backendState === 'red' ? 'red' : 'idle'}`} />
+            <span>
+              backend {backendOk == null ? '…' : backendOk ? 'activo' : 'down'}
+            </span>
+          </div>
+        </div>
+      </div>
 
       {error && (
-        <div className="alert alert-danger m-2 py-2 d-flex align-items-center">
-          {error}
-          <button className="btn-close ms-auto" onClick={() => setError('')}></button>
+        <div className="np-toast">
+          <span>{error}</span>
+          <button onClick={() => setError('')}>×</button>
         </div>
       )}
 
-      {/* Cuerpo */}
-      <div className="d-flex flex-grow-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="border-end d-flex flex-column" style={{ width: 280 }}>
-          <div className="p-2 border-bottom">
-            <div className="d-flex gap-2">
-              <select
-                className="form-select form-select-sm"
-                value={project}
-                onChange={(e) => selectProject(e.target.value)}
-              >
-                {projects.length === 0 && <option value="">(sin proyectos)</option>}
-                {projects.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-              <button className="btn btn-sm btn-success" title="Nuevo proyecto" onClick={() => setShowNew(true)}>
-                +
-              </button>
-            </div>
-          </div>
+      {/* ============ CUERPO (Variación A · paneles flotantes) ============ */}
+      <div className="np-body">
+        {/* SIDEBAR */}
+        <div className="np-sidebar np-col">
+          <div className="np-panel" style={{ flex: 1 }}>
 
-          {project && (
-            <div className="d-flex gap-1 p-2 border-bottom">
-              <button className="btn btn-sm btn-outline-secondary flex-grow-1" onClick={() => createEntry('file')}>
-                + Archivo
-              </button>
-              <button className="btn btn-sm btn-outline-secondary flex-grow-1" onClick={() => createEntry('dir')}>
-                + Carpeta
-              </button>
-              <button className="btn btn-sm btn-outline-danger" title="Eliminar proyecto" onClick={deleteCurrentProject}>
-                🗑
-              </button>
-            </div>
-          )}
 
-          <div className="flex-grow-1 overflow-auto py-1">
+            <div className="np-section">
+              <span className="np-section-title">Explorador</span>
+              <div className="d-flex" style={{ gap: 2 }}>
+                <button
+                  className="np-mini-btn np-hov"
+                  title="Nuevo archivo"
+                  disabled={!project}
+                  onClick={() => createEntry('file')}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 11v6M9 14h6" />
+                  </svg>
+                </button>
+                <button
+                  className="np-mini-btn np-hov"
+                  title="Nueva carpeta"
+                  disabled={!project}
+                  onClick={() => createEntry('dir')}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  </svg>
+                </button>
+                <button
+                  className="np-mini-btn np-hov"
+                  title="Eliminar proyecto"
+                  disabled={!project}
+                  onClick={deleteCurrentProject}
+                  style={{ color: '#f0857c' }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
             <FileTree tree={tree} activePath={openFile} onOpen={openNode} onDelete={deleteNode} />
+            <div style={{ padding: '8px 14px', borderTop: '1px solid var(--border)', fontSize: '10.5px', color: '#5a616a', display: 'flex', justifyContent: 'space-between', opacity: 0.7 }}>
+              <span>v0.1.0</span>
+              <span>
+                Hecho por <a href="https://krypton-n.github.io/Portafolio/" target="_blank" rel="noreferrer" style={{ color: '#969ca4', textDecoration: 'none' }}>Noe Rodriguez</a>
+              </span>
+            </div>
           </div>
-        </aside>
+        </div>
 
-        {/* Editor + Terminal */}
-        <main className="flex-grow-1 d-flex flex-column overflow-hidden">
-          <div className="flex-grow-1 overflow-hidden">
-            <EditorPane file={openFile} value={content} dirty={dirty} onChange={setContent} onSave={save} />
+        {/* CENTRO: editor + dock */}
+        <div className="np-center">
+          <div className="np-panel np-panel--editor" style={{ flex: 1 }}>
+            <MainTabs
+              project={project}
+              file={openFile}
+              value={content}
+              dirty={dirty}
+              onChange={setContent}
+              onSave={save}
+            />
           </div>
-          <div className="border-top" style={{ height: 240 }}>
-            <TerminalPanel project={project} />
+          <div className="np-panel np-panel--editor np-dock" style={{ height: 230 }}>
+            <BottomPanel project={project} />
           </div>
-        </main>
+        </div>
+
+        {/* ASISTENTE IA */}
+        <AssistantPanel
+          project={project}
+          currentFile={openFile ? { path: openFile, content } : null}
+          onApplied={() => project && loadTree(project)}
+        />
       </div>
 
       {showNew && (

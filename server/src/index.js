@@ -4,19 +4,27 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const express = require('express');
 const cors = require('cors');
-const { checkConnection } = require('./config/database');
+const { sequelize, checkConnection } = require('./config/database');
 const projectsRouter = require('./routes/projects');
+const aiRouter = require('./routes/ai');
 const { setupWebSocket } = require('./ws');
+const { setupPreview } = require('./preview');
 const processManager = require('./services/processManager');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 
 app.use(cors());
+
+// Preview ANTES de express.json(): el proxy reenvía el body crudo a la app
+// del usuario sin que el parser de JSON lo consuma.
+setupPreview(app);
+
 app.use(express.json());
 
 // Rutas de la API (workspace, archivos, plantillas)
 app.use('/api', projectsRouter);
+app.use('/api', aiRouter);
 
 // Health check: reporta el estado del servidor y de la conexión a MySQL.
 app.get('/healthz', async (req, res) => {
@@ -44,6 +52,17 @@ const server = app.listen(PORT, () => {
 
 // WebSocket para logs de procesos en vivo (mismo puerto).
 setupWebSocket(server);
+
+// Limpia procesos huérfanos de una sesión anterior y arranca los health-checks.
+processManager.cleanupOrphans();
+processManager.startHealthChecks();
+
+// Crea la tabla de historial de chat si la BD está disponible.
+require('./models/chatMessage');
+sequelize
+  .sync()
+  .then(() => console.log('[NodePilot] Modelos sincronizados (historial de chat listo).'))
+  .catch((e) => console.warn('[NodePilot] Sin persistencia de chat (BD no disponible):', e.message));
 
 // Al apagar el servidor, mata los procesos hijos para no dejar zombies.
 function shutdown() {

@@ -41,4 +41,25 @@ export const api = {
   run: (id, action) => json('POST', `/api/projects/${id}/run`, { action }),
   stop: (id) => request(`/api/projects/${id}/stop`, { method: 'POST' }),
   getStatus: (id) => request(`/api/projects/${id}/status`),
+
+  // Controlador de procesos (F3)
+  listProcesses: () => request('/api/processes'),
+  restart: (id) => request(`/api/projects/${id}/restart`, { method: 'POST' }),
+
+  // Asistente IA (F5)
+  aiChat: (id, message, model, context) =>
+    json('POST', `/api/projects/${id}/ai/chat`, { message, model, context }),
+  aiApply: (id, files) => json('POST', `/api/projects/${id}/ai/apply`, { files }),
+  aiHistory: (id) => request(`/api/projects/${id}/ai/history`),
+  aiClearHistory: (id) => request(`/api/projects/${id}/ai/history`, { method: 'DELETE' }),
+
+  // Autocompletado inline. Acepta un AbortSignal para cancelar la petición
+  // cuando el usuario sigue escribiendo (evita ghost text obsoleto).
+  aiComplete: (body, signal) =>
+    request('/api/ai/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal,
+    }),
 };
