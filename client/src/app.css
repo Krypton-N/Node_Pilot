@@ -33,6 +33,314 @@
   box-sizing: border-box;
 }
 
+/* ============ Login (ventana de autenticación previa) ============ */
+.np-login {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.np-login-card {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 30px 26px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+.np-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.np-login-brand img {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+.np-login-sub {
+  margin: -6px 0 6px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+.np-login-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-2);
+}
+.np-login-label input {
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-chip);
+  color: var(--text);
+  font-size: 13px;
+  padding: 9px 11px;
+  outline: none;
+}
+.np-login-label input:focus {
+  border-color: rgba(217, 43, 33, 0.5);
+}
+.np-login-error {
+  color: var(--red);
+  background: var(--red-soft);
+  border-radius: var(--radius-chip);
+  padding: 8px 11px;
+  font-size: 12px;
+}
+.np-login-btn {
+  margin-top: 4px;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius-chip);
+  background: var(--red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.np-login-btn:hover {
+  background: var(--red-deep);
+}
+.np-login-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* ============ Dashboard (CRUD de ejercicios, ventana intermedia) ============ */
+.np-dash {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 30px 24px 60px;
+}
+.np-dash-shell {
+  width: 100%;
+  max-width: 980px;
+}
+.np-dash-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+.np-dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.np-dash-brand img {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.np-dash-exit {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-chip);
+  color: var(--text-2);
+  font-size: 12.5px;
+  padding: 8px 13px;
+  cursor: pointer;
+}
+.np-dash-exit:hover {
+  color: var(--text);
+  border-color: rgba(224, 53, 42, 0.45);
+}
+.np-dash-head {
+  margin-bottom: 22px;
+}
+.np-dash-welcome {
+  font-size: 15px;
+  color: var(--text-2);
+  margin-bottom: 6px;
+}
+.np-dash-welcome strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.np-dash-title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  background: linear-gradient(92deg, #fff, #f0857c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.np-dash-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.np-dash-toolbar .np-btn {
+  font-size: 13px;
+  padding: 9px 15px;
+}
+.np-dash-count {
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+/* Tabla */
+.np-dash-tablewrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+.np-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.np-table thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-3);
+  padding: 13px 18px;
+  background: var(--surface-raised);
+  border-bottom: 1px solid var(--border);
+}
+.np-table-col-act {
+  width: 1%;
+  white-space: nowrap;
+}
+.np-table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+.np-table tbody tr:last-child {
+  border-bottom: none;
+}
+.np-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.015);
+}
+.np-table-name {
+  padding: 13px 18px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+.np-table-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.np-table-empty {
+  padding: 34px 18px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.np-act-group {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 11px 18px;
+  flex-wrap: nowrap;
+}
+.np-act {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-chip);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+}
+.np-act:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.05);
+}
+.np-act svg {
+  flex-shrink: 0;
+}
+.np-act--run:hover {
+  color: var(--green-text);
+  border-color: rgba(48, 184, 92, 0.5);
+}
+.np-act--danger:hover {
+  color: #f0857c;
+  border-color: rgba(224, 53, 42, 0.5);
+  background: var(--red-soft);
+}
+
+/* Alerta de confirmación centrada */
+.np-alert {
+  width: 320px;
+  text-align: center;
+  padding: 26px 24px 22px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+.np-alert-icon {
+  color: var(--amber);
+  margin-bottom: 10px;
+}
+.np-alert-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.np-alert-text {
+  margin: 0 0 12px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+.np-alert-target {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-chip);
+  padding: 8px 12px;
+  margin-bottom: 18px;
+  word-break: break-all;
+}
+.np-alert-actions {
+  display: flex;
+  gap: 10px;
+}
+.np-alert-actions .np-btn {
+  flex: 1;
+  justify-content: center;
+  padding: 9px;
+  font-size: 13px;
+}
+
 html,
 body,
 #root {
@@ -389,9 +697,9 @@ body {
   text-transform: uppercase;
 }
 .np-mini-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;

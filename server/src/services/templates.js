@@ -104,7 +104,12 @@ startServer(PORT);
   'express-sequelize': {
     label: 'Express + Sequelize + MySQL',
     description: 'Servidor Express con CRUD de productos persistido en MySQL usando Sequelize. ¡Crea la base de datos automáticamente al arrancar!',
-    files: (name) => ({
+    files: (name) => {
+      // BD propia por proyecto, derivada del nombre, para no colisionar con la
+      // base interna del IDE (nodepilot). MySQL no admite guiones sin backticks,
+      // así que se normalizan a guion bajo.
+      const dbName = name.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+      return {
       'package.json': pkg(name, {
         dependencies: {
           express: '^4.21.2',
@@ -116,9 +121,9 @@ startServer(PORT);
       '.env.example': `# Configuración de base de datos MySQL
 DB_HOST=localhost
 DB_PORT=3306
-DB_NAME=nodepilot
+DB_NAME=${dbName}
 DB_USER=root
-DB_PASSWORD=NodePilot#2026
+DB_PASSWORD=1234
 
 PORT=3000
 `,
@@ -243,9 +248,9 @@ Este proyecto es una plantilla de Express lista para usar con MySQL y Sequelize.
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const DB_NAME = process.env.DB_NAME || 'nodepilot';
+const DB_NAME = process.env.DB_NAME || '${dbName}';
 const DB_USER = process.env.DB_USER || 'root';
-const DB_PASSWORD = process.env.DB_PASSWORD || 'NodePilot#2026';
+const DB_PASSWORD = process.env.DB_PASSWORD || '1234';
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = Number(process.env.DB_PORT) || 3306;
 
@@ -409,7 +414,8 @@ app.get('/ping', (req, res) => res.json({ status: 'pong' }));
   }
 })();
 `,
-    }),
+      };
+    },
   },
 };
 

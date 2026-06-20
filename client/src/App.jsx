@@ -6,9 +6,16 @@ import MainTabs from './components/MainTabs';
 import BottomPanel from './components/BottomPanel';
 import AssistantPanel from './components/AssistantPanel';
 import NewProjectModal from './components/NewProjectModal';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import './app.css';
 
 export default function App() {
+  // Estado de sesión: se recuerda durante la pestaña con sessionStorage para
+  // no pedir login en cada recarga, pero exige autenticarse al abrir la app.
+  const [user, setUser] = useState(() => sessionStorage.getItem('np_user') || null);
+  // Vista activa tras el login: 'dashboard' (CRUD de ejercicios) o 'ide'.
+  const [view, setView] = useState('dashboard');
   const [backendOk, setBackendOk] = useState(null);
   const [projects, setProjects] = useState([]);
   const [project, setProject] = useState('');
@@ -21,11 +28,52 @@ export default function App() {
 
   const dirty = openFile !== null && content !== savedContent;
 
-  // --- carga inicial ---
+  // --- carga inicial (solo tras autenticarse) ---
   useEffect(() => {
+    if (!user) return;
     api.health().then((h) => setBackendOk(h.status === 'ok')).catch(() => setBackendOk(false));
     refreshProjects();
-  }, []);
+  }, [user]);
+
+  function handleLogin(name) {
+    sessionStorage.setItem('np_user', name);
+    setUser(name);
+    setView('dashboard');
+  }
+
+  function logout() {
+    sessionStorage.removeItem('np_user');
+    setUser(null);
+    setView('dashboard');
+  }
+
+  // Abre un ejercicio en el IDE desde el panel. 'run' además lo ejecuta.
+  function openProject(id, mode = 'view') {
+    selectProject(id);
+    setView('ide');
+    if (mode === 'run') {
+      // Pequeña espera para que la terminal se suscriba a los logs antes de arrancar.
+      setTimeout(() => api.run(id, 'start').catch(() => {}), 700);
+    }
+  }
+
+  function backToDashboard() {
+    setView('dashboard');
+    refreshProjects();
+  }
+
+  // Baja de ejercicio desde el panel: elimina la carpeta del workspace.
+  async function removeProject(id) {
+    await api.deleteProject(id);
+    if (project === id) {
+      setProject('');
+      setTree([]);
+      setOpenFile(null);
+      setContent('');
+      setSavedContent('');
+    }
+    await refreshProjects();
+  }
 
   async function refreshProjects() {
     try {
@@ -131,6 +179,23 @@ export default function App() {
     }
   }
 
+  // Puerta de entrada: sin sesión, solo se muestra el login.
+  if (!user) return <Login onSuccess={handleLogin} />;
+
+  // Ventana intermedia: panel CRUD de ejercicios antes del IDE.
+  if (view === 'dashboard') {
+    return (
+      <Dashboard
+        user={user}
+        projects={projects}
+        onOpen={openProject}
+        onDelete={removeProject}
+        onRefresh={refreshProjects}
+        onLogout={logout}
+      />
+    );
+  }
+
   const backendState =
     backendOk == null ? 'idle' : backendOk ? 'green' : 'red';
 
@@ -143,6 +208,12 @@ export default function App() {
             <img src={logoImg} alt="NodePilot Logo" style={{ width: 25, height: 25, borderRadius: 8, objectFit: 'cover' }} />
             <span className="np-wordmark">NodePilot</span>
           </div>
+          <div className="np-divider" />
+          <button className="np-mini-btn np-hov" title="Volver al panel de ejercicios" onClick={backToDashboard}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+              <path d="M3 12l9-9 9 9M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10" />
+            </svg>
+          </button>
           <div className="np-divider" />
           {/* selector de proyecto (lógica real conservada) */}
           <div className="np-project np-hov">
@@ -161,7 +232,7 @@ export default function App() {
             title="Nuevo proyecto"
             onClick={() => setShowNew(true)}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 5v14M5 12h14" />
             </svg>
           </button>
@@ -174,6 +245,11 @@ export default function App() {
               backend {backendOk == null ? '…' : backendOk ? 'activo' : 'down'}
             </span>
           </div>
+          <button className="np-mini-btn np-hov" title={`Cerrar sesión (${user})`} onClick={logout}>
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -200,7 +276,7 @@ export default function App() {
                   disabled={!project}
                   onClick={() => createEntry('file')}
                 >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M14 3v4a1 1 0 0 0 1 1h4M5 3h9l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 11v6M9 14h6" />
                   </svg>
                 </button>
@@ -210,7 +286,7 @@ export default function App() {
                   disabled={!project}
                   onClick={() => createEntry('dir')}
                 >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                   </svg>
                 </button>
@@ -221,7 +297,7 @@ export default function App() {
                   onClick={deleteCurrentProject}
                   style={{ color: '#f0857c' }}
                 >
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
                   </svg>
                 </button>

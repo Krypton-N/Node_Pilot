@@ -7,6 +7,7 @@ const cors = require('cors');
 const { sequelize, checkConnection } = require('./config/database');
 const projectsRouter = require('./routes/projects');
 const aiRouter = require('./routes/ai');
+const authRouter = require('./routes/auth');
 const { setupWebSocket } = require('./ws');
 const { setupPreview } = require('./preview');
 const processManager = require('./services/processManager');
@@ -23,6 +24,7 @@ setupPreview(app);
 app.use(express.json());
 
 // Rutas de la API (workspace, archivos, plantillas)
+app.use('/api', authRouter);
 app.use('/api', projectsRouter);
 app.use('/api', aiRouter);
 
@@ -57,12 +59,15 @@ setupWebSocket(server);
 processManager.cleanupOrphans();
 processManager.startHealthChecks();
 
-// Crea la tabla de historial de chat si la BD está disponible.
+// Crea las tablas (historial de chat y usuarios) si la BD está disponible
+// y siembra el usuario por defecto del login (admin / 1234).
 require('./models/chatMessage');
+const { ensureDefaultUser } = require('./models/user');
 sequelize
   .sync()
-  .then(() => console.log('[NodePilot] Modelos sincronizados (historial de chat listo).'))
-  .catch((e) => console.warn('[NodePilot] Sin persistencia de chat (BD no disponible):', e.message));
+  .then(() => ensureDefaultUser())
+  .then(() => console.log('[NodePilot] Modelos sincronizados (historial de chat y login listos).'))
+  .catch((e) => console.warn('[NodePilot] Sin persistencia (BD no disponible):', e.message));
 
 // Al apagar el servidor, mata los procesos hijos para no dejar zombies.
 function shutdown() {

@@ -22,6 +22,9 @@ function json(method, url, body) {
 export const api = {
   health: () => request('/healthz'),
 
+  // Login local validado contra MySQL (único usuario: admin / 1234).
+  login: (username, password) => json('POST', '/api/login', { username, password }),
+
   listTemplates: () => request('/api/templates'),
   listProjects: () => request('/api/projects'),
   createProject: (name, template) => json('POST', '/api/projects', { name, template }),
