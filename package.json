@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "IDE web + asistente de IA experto en el ecosistema Node.js",
+  "engines": {
+    "node": "18.12.0"
+  },
   "workspaces": [
     "server",
     "client"

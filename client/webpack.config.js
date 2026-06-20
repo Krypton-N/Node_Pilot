@@ -45,17 +45,17 @@ module.exports = {
       overlay: { errors: true, warnings: false, runtimeErrors: false },
     },
     // El front consume el backend Express sin lidiar con CORS:
-    // todo lo que vaya a /healthz o /api se reenvía al puerto 3001.
+    // todo lo que vaya a /healthz o /api se reenvía al puerto 8080.
     proxy: [
       {
         context: ['/healthz', '/api', '/preview'],
-        target: 'http://localhost:3001',
+        target: 'http://localhost:8080',
       },
       {
         // Logs de procesos en vivo (WebSocket) hacia el backend.
         // Ruta '/np-ws' propia para no chocar con el HMR de webpack ('/ws').
         context: ['/np-ws'],
-        target: 'http://localhost:3001',
+        target: 'http://localhost:8080',
         ws: true,
       },
     ],

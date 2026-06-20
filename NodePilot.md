@@ -1,3 +1,0 @@
-| Proyecto | Tecnologías | Referencia | Líder |
-|-----------|------------|------------|--------|
-| NodePilot – APLICACION WEB ASISTENTE DE CODIFICACION CON PROMPT(Asistente de Node.js) PARA NODEJS CON IA UTILIZANDO  NODEJS, REACT CON ECMASCRIPT 6, BOOTSTRAP , MYSQL, EXPRESS.JS, SEQUELIZE, BABEL Y WEBPACK. | Node.js, React (ES6), Bootstrap, MySQL, Express.js, Sequelize, Babel, Webpack | https://spring.io/blog/2025/04/14/spring-ai-prompt-engineering-patterns | Rodríguez Flor |

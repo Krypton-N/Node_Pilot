@@ -218,12 +218,43 @@ class ProcessManager {
     const def = COMMANDS[action];
     const port = def.long ? this._allocPort() : undefined;
     const env = { ...process.env };
+
+    // Resolución robusta de Node/npm. Con nvm en Windows, `npm` es un .cmd que
+    // invoca a `node` vía PATH; pero el prefijo global (AppData\Roaming\npm)
+    // tiene un npm.cmd SIN node.exe al lado, y el directorio de nvm es un
+    // symlink que no siempre resuelve. Resultado: '"node" no se reconoce'.
+    // Para evitarlo, invocamos npm con la ruta ABSOLUTA del node real +
+    // npm-cli.js (sin depender del PATH ni del shell), y además anteponemos la
+    // carpeta del node real al PATH para los scripts del propio proyecto
+    // (p. ej. `npm start` -> `node src/index.js`).
+    let nodeExe;
+    try {
+      nodeExe = fs.realpathSync(process.execPath); // resuelve el symlink de nvm
+    } catch {
+      nodeExe = process.execPath;
+    }
+    const nodeDir = path.dirname(nodeExe);
+    const pathKey = Object.keys(env).find((k) => k.toLowerCase() === 'path') || 'PATH';
+    env[pathKey] = nodeDir + path.delimiter + (env[pathKey] || '');
     if (port) env.PORT = String(port);
+
+    // Comando a ejecutar: si encontramos npm-cli.js junto al node real, lo
+    // lanzamos como `node npm-cli.js <args>` (a prueba de PATH). Si no, caemos
+    // al `npm` clásico vía shell.
+    const npmCli = path.join(nodeDir, 'node_modules', 'npm', 'bin', 'npm-cli.js');
+    const hasNpmCli = fs.existsSync(npmCli);
+    const spawnCmd = hasNpmCli ? nodeExe : def.cmd;
+    const spawnArgs = hasNpmCli ? [npmCli, ...def.args] : def.args;
 
     // Limpia el log de la corrida anterior.
     this.logs.set(projectId, []);
 
-    const child = spawn(def.cmd, def.args, { cwd, shell: true, env, windowsHide: true });
+    const child = spawn(spawnCmd, spawnArgs, {
+      cwd,
+      shell: !hasNpmCli, // sin shell cuando invocamos node+npm-cli por ruta absoluta
+      env,
+      windowsHide: true,
+    });
     const rec = {
       child,
       projectId,
