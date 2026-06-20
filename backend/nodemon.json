@@ -1,0 +1,5 @@
+{
+  "watch": ["Application.js", "src"],
+  "ext": "js,json",
+  "ignore": ["../workspace/**", "public/**"]
+}

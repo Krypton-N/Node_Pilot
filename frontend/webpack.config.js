@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/index.jsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.[contenthash].js',
+    filename: 'main.js',
     clean: true,
   },
   resolve: {
@@ -34,7 +34,8 @@ module.exports = {
     }),
   ],
   devServer: {
-    port: 3000,
+    port: 8080,
+    static: { directory: path.join(__dirname, 'dist') },
     open: true,
     hot: true,
     historyApiFallback: true,
@@ -45,17 +46,17 @@ module.exports = {
       overlay: { errors: true, warnings: false, runtimeErrors: false },
     },
     // El front consume el backend Express sin lidiar con CORS:
-    // todo lo que vaya a /healthz o /api se reenvía al puerto 8080.
+    // todo lo que vaya a /healthz o /api se reenvía al backend en el puerto 3001.
     proxy: [
       {
         context: ['/healthz', '/api', '/preview'],
-        target: 'http://localhost:8080',
+        target: 'http://localhost:3001',
       },
       {
         // Logs de procesos en vivo (WebSocket) hacia el backend.
         // Ruta '/np-ws' propia para no chocar con el HMR de webpack ('/ws').
         context: ['/np-ws'],
-        target: 'http://localhost:8080',
+        target: 'http://localhost:3001',
         ws: true,
       },
     ],

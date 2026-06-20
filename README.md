@@ -70,15 +70,15 @@ cd NodePilot
 ```
 
 ### 2. Configurar el Backend (Servidor)
-1. Navega al directorio del servidor:
+1. Navega al directorio del backend:
    ```bash
-   cd server
+   cd backend
    ```
 2. Instala las dependencias:
    ```bash
    npm install
    ```
-3. Configura las variables de entorno creando un archivo `.env` en la raíz de la carpeta `server` a partir de `.env.example`:
+3. Configura las variables de entorno creando un archivo `.env` en la raíz de la carpeta `backend` a partir de `.env.example`:
    ```env
    # Puerto del backend de NodePilot
    PORT=3001
@@ -93,15 +93,15 @@ cd NodePilot
    # Clave API de DeepSeek para el Asistente
    DEEPSEEK_API_KEY=tu_api_key_aquí
    ```
-4. Arranca el backend en modo desarrollo:
+4. Arranca el backend:
    ```bash
-   npm run dev
+   npm start
    ```
 
 ### 3. Configurar el Frontend (Cliente)
-1. En otra terminal, navega al directorio del cliente:
+1. En otra terminal, navega al directorio del frontend:
    ```bash
-   cd client
+   cd frontend
    ```
 2. Instala las dependencias:
    ```bash
@@ -109,9 +109,9 @@ cd NodePilot
    ```
 3. Inicia el servidor de desarrollo de Webpack:
    ```bash
-   npm run dev
+   npm start
    ```
-4. Abre http://localhost:3000 en tu navegador. El proxy redirigirá automáticamente las peticiones de API hacia el servidor en el puerto 3001.
+4. Abre http://localhost:8080 en tu navegador. El proxy redirigirá automáticamente las peticiones de API hacia el backend en el puerto 3001.
 
 ---
 

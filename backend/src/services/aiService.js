@@ -19,7 +19,7 @@ const MODELS = {
 let client = null;
 function getClient() {
   if (!process.env.DEEPSEEK_API_KEY) {
-    throw httpError('Falta DEEPSEEK_API_KEY en server/.env para usar el asistente.', 400);
+    throw httpError('Falta DEEPSEEK_API_KEY en backend/.env para usar el asistente.', 400);
   }
   if (!client) {
     // DeepSeek expone una API compatible con OpenAI; reutilizamos el SDK oficial.

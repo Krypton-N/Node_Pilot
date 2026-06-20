@@ -1,16 +1,16 @@
 const path = require('path');
-// Carga server/.env sin depender del directorio desde el que se ejecute node.
-require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+// Carga backend/.env sin depender del directorio desde el que se ejecute node.
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const cors = require('cors');
-const { sequelize, checkConnection } = require('./config/database');
-const projectsRouter = require('./routes/projects');
-const aiRouter = require('./routes/ai');
-const authRouter = require('./routes/auth');
-const { setupWebSocket } = require('./ws');
-const { setupPreview } = require('./preview');
-const processManager = require('./services/processManager');
+const { sequelize, checkConnection } = require('./src/config/database');
+const projectsRouter = require('./src/routes/projects');
+const aiRouter = require('./src/routes/ai');
+const authRouter = require('./src/routes/auth');
+const { setupWebSocket } = require('./src/ws');
+const { setupPreview } = require('./src/preview');
+const processManager = require('./src/services/processManager');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -22,6 +22,11 @@ app.use(cors());
 setupPreview(app);
 
 app.use(express.json());
+
+// Front-End integrado: sirve el build del frontend (index.html + main.js) que
+// `npm run build` del frontend copia a backend/public. No tapa /api ni /np-ws
+// porque esos paths no existen como archivos dentro de public.
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Rutas de la API (workspace, archivos, plantillas)
 app.use('/api', authRouter);
@@ -61,8 +66,8 @@ processManager.startHealthChecks();
 
 // Crea las tablas (historial de chat y usuarios) si la BD está disponible
 // y siembra el usuario por defecto del login (admin / 1234).
-require('./models/chatMessage');
-const { ensureDefaultUser } = require('./models/user');
+require('./src/models/chatMessage');
+const { ensureDefaultUser } = require('./src/models/user');
 sequelize
   .sync()
   .then(() => ensureDefaultUser())

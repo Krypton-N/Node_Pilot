@@ -1,12 +1,12 @@
 {
-  "name": "@nodepilot/server",
+  "name": "@nodepilot/backend",
   "version": "0.1.0",
   "private": true,
   "description": "Backend Express de NodePilot",
-  "main": "src/index.js",
+  "main": "Application.js",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "dev": "nodemon Application.js",
+    "start": "node Application.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

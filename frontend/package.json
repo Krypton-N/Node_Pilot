@@ -1,11 +1,12 @@
 {
-  "name": "@nodepilot/client",
+  "name": "@nodepilot/frontend",
   "version": "0.1.0",
   "private": true,
   "description": "Frontend React de NodePilot",
   "scripts": {
-    "dev": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "start": "webpack serve --mode development",
+    "build": "webpack",
+    "postbuild": "node scripts/copy-to-backend.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
