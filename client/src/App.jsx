@@ -47,14 +47,79 @@ export default function App() {
     setView('dashboard');
   }
 
-  // Abre un ejercicio en el IDE desde el panel. 'run' además lo ejecuta.
-  function openProject(id, mode = 'view') {
+  // Abre un ejercicio en el IDE desde el panel.
+  //  'view' → IDE con el explorador, sin archivo abierto en el editor.
+  //  'edit' → IDE abriendo directamente el archivo índice del proyecto.
+  async function openProject(id, mode = 'view') {
     selectProject(id);
     setView('ide');
-    if (mode === 'run') {
-      // Pequeña espera para que la terminal se suscriba a los logs antes de arrancar.
-      setTimeout(() => api.run(id, 'start').catch(() => {}), 700);
+    if (mode === 'edit') {
+      try {
+        const entry = await resolveEntryFile(id);
+        if (entry) {
+          const { content } = await api.readFile(id, entry);
+          setOpenFile(entry);
+          setContent(content);
+          setSavedContent(content);
+        }
+      } catch (e) {
+        setError(e.message);
+      }
     }
+  }
+
+  // Resuelve el archivo "índice" de un proyecto (su punto de entrada).
+  async function resolveEntryFile(id) {
+    const { tree } = await api.getTree(id);
+    const files = [];
+    const walk = (nodes) =>
+      nodes.forEach((n) => (n.type === 'dir' ? walk(n.children || []) : files.push(n.path)));
+    walk(tree);
+    const preferred = [
+      'src/index.js', 'index.js', 'server.js', 'app.js',
+      'src/app.js', 'src/server.js', 'src/main.js', 'main.js',
+    ];
+    for (const p of preferred) if (files.includes(p)) return p;
+    return files.find((f) => f.endsWith('.js')) || files.find((f) => f.endsWith('.html')) || files[0] || null;
+  }
+
+  // Sondea el estado de un proceso hasta que cumpla la condición (o agote tiempo).
+  async function waitForStatus(id, predicate, timeoutMs) {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      let st;
+      try {
+        st = await api.getStatus(id);
+      } catch {
+        st = { running: false };
+      }
+      if (predicate(st)) return st;
+      await new Promise((r) => setTimeout(r, 800));
+    }
+    return null;
+  }
+
+  // "Probar ejercicio": instala → ejecuta → espera a que el servidor responda,
+  // y devuelve la URL local del proyecto en marcha (sin entrar al IDE).
+  async function probarProject(id) {
+    let st = await api.getStatus(id).catch(() => ({ running: false }));
+    // Si ya está corriendo y listo, abre directo.
+    if (st.running && st.action === 'start' && st.port && st.health === 'up') {
+      return `http://localhost:${st.port}`;
+    }
+    // Instala dependencias si no hay nada en marcha (equivale a "Instalar").
+    if (!st.running) {
+      await api.run(id, 'install');
+      await waitForStatus(id, (s) => !s.running, 180000);
+    }
+    // Arranca el servidor (equivale a "Ejecutar").
+    st = await api.getStatus(id).catch(() => ({ running: false }));
+    if (!st.running) await api.run(id, 'start');
+    // Espera a que el servidor esté escuchando.
+    const up = await waitForStatus(id, (s) => s.running && s.port && s.health === 'up', 60000);
+    const port = (up && up.port) || st.port;
+    if (!port) throw new Error('El servidor no respondió a tiempo. Revisa los logs en el IDE.');
+    return `http://localhost:${port}`;
   }
 
   function backToDashboard() {
@@ -189,6 +254,7 @@ export default function App() {
         user={user}
         projects={projects}
         onOpen={openProject}
+        onProbar={probarProject}
         onDelete={removeProject}
         onRefresh={refreshProjects}
         onLogout={logout}

@@ -194,6 +194,27 @@
   color: var(--text-3);
   font-size: 12px;
 }
+.np-dash-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: #f0857c;
+  background: var(--red-soft);
+  border: 1px solid rgba(224, 53, 42, 0.3);
+  border-radius: var(--radius-chip);
+}
+.np-dash-error button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+}
 
 /* Tabla */
 .np-dash-tablewrap {

@@ -43,10 +43,12 @@ const WarnIcon = () => (
 
 // Ventana intermedia entre el login y el IDE: panel de administración de
 // ejercicios (CRUD) sobre los proyectos del workspace.
-export default function Dashboard({ user, projects, onOpen, onDelete, onRefresh, onLogout }) {
+export default function Dashboard({ user, projects, onOpen, onProbar, onDelete, onRefresh, onLogout }) {
   const [showNew, setShowNew] = useState(false);
   const [pendingDelete, setPendingDelete] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [probingId, setProbingId] = useState(null);
+  const [error, setError] = useState('');
 
   async function confirmDelete() {
     if (!pendingDelete) return;
@@ -56,6 +58,34 @@ export default function Dashboard({ user, projects, onOpen, onDelete, onRefresh,
       setPendingDelete(null);
     } finally {
       setBusy(false);
+    }
+  }
+
+  // Probar: instala y ejecuta el proyecto, luego abre su localhost en otra
+  // pestaña. La pestaña se abre de inmediato (gesto del usuario) para que el
+  // navegador no la bloquee como pop-up; su URL se fija cuando el server responde.
+  async function probar(p) {
+    if (probingId) return;
+    setError('');
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(
+        `<title>Iniciando ${p}</title><body style="margin:0;height:100vh;display:flex;` +
+          `align-items:center;justify-content:center;font-family:system-ui,sans-serif;` +
+          `background:#0b0d10;color:#e8eaed"><div>Iniciando <b>${p}</b>… instalando y ` +
+          `arrancando el servidor.</div></body>`
+      );
+    }
+    setProbingId(p);
+    try {
+      const url = await onProbar(p);
+      if (win) win.location.href = url;
+      else window.open(url, '_blank');
+    } catch (e) {
+      if (win) win.close();
+      setError(`No se pudo probar “${p}”: ${e.message}`);
+    } finally {
+      setProbingId(null);
     }
   }
 
@@ -93,6 +123,13 @@ export default function Dashboard({ user, projects, onOpen, onDelete, onRefresh,
           </span>
         </div>
 
+        {error && (
+          <div className="np-dash-error">
+            <span>{error}</span>
+            <button onClick={() => setError('')}>×</button>
+          </div>
+        )}
+
         {/* Tabla de ejercicios */}
         <div className="np-dash-tablewrap">
           <table className="np-table">
@@ -126,9 +163,14 @@ export default function Dashboard({ user, projects, onOpen, onDelete, onRefresh,
                         <PencilIcon />
                         Modificar ejercicio
                       </button>
-                      <button className="np-act np-act--run" onClick={() => onOpen(p, 'run')} title="Abrir en el IDE y ejecutar">
+                      <button
+                        className="np-act np-act--run"
+                        onClick={() => probar(p)}
+                        disabled={probingId === p}
+                        title="Instalar, ejecutar y abrir en el navegador"
+                      >
                         <PlayIcon />
-                        Probar ejercicio
+                        {probingId === p ? 'Iniciando…' : 'Probar ejercicio'}
                       </button>
                       <button className="np-act np-act--danger" onClick={() => setPendingDelete(p)} title="Eliminar del workspace">
                         <TrashIcon />
