@@ -53,9 +53,15 @@ export default function Dashboard({ user, projects, onOpen, onProbar, onDelete, 
   async function confirmDelete() {
     if (!pendingDelete) return;
     setBusy(true);
+    setError('');
     try {
       await onDelete(pendingDelete);
       setPendingDelete(null);
+    } catch (e) {
+      // Antes el error se tragaba: el modal quedaba abierto y "no hacía nada".
+      // Ahora se cierra el modal y se informa el motivo en la barra de error.
+      setPendingDelete(null);
+      setError(`No se pudo eliminar “${pendingDelete}”: ${e.message}`);
     } finally {
       setBusy(false);
     }

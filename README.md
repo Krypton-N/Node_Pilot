@@ -81,7 +81,7 @@ cd NodePilot
 3. Configura las variables de entorno creando un archivo `.env` en la raíz de la carpeta `backend` a partir de `.env.example`:
    ```env
    # Puerto del backend de NodePilot
-   PORT=3001
+   PORT=8080
 
    # Configuración de base de datos MySQL para historial
    DB_HOST=localhost
@@ -111,7 +111,7 @@ cd NodePilot
    ```bash
    npm start
    ```
-4. Abre http://localhost:8080 en tu navegador. El proxy redirigirá automáticamente las peticiones de API hacia el backend en el puerto 3001.
+4. Abre http://localhost:3000 en tu navegador. El proxy redirigirá automáticamente las peticiones de API hacia el backend en el puerto 8080.
 
 ---
 

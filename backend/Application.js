@@ -13,7 +13,7 @@ const { setupPreview } = require('./src/preview');
 const processManager = require('./src/services/processManager');
 
 const app = express();
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = Number(process.env.PORT) || 8080;
 
 app.use(cors());
 

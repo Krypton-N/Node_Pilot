@@ -74,7 +74,10 @@ async function deleteProject(projectId) {
   if (!(await pathExists(root))) {
     throw httpError('Proyecto no encontrado.', 404);
   }
-  await fs.rm(root, { recursive: true, force: true });
+  // En Windows, justo tras matar el servidor del proyecto el SO puede tardar un
+  // instante en liberar los handles de node_modules; maxRetries/retryDelay
+  // reintenta ante EBUSY/EPERM/ENOTEMPTY en lugar de fallar a la primera.
+  await fs.rm(root, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 }
 
 // --- Árbol de archivos ------------------------------------------------------

@@ -219,6 +219,19 @@ class ProcessManager {
     const port = def.long ? this._allocPort() : undefined;
     const env = { ...process.env };
 
+    // Aislamiento: NO filtrar la configuración interna del IDE a los proyectos
+    // del usuario. El backend carga su backend/.env (DB_NAME=nodepilot, claves
+    // de IA, PORT) en process.env; sin esto, esas variables se heredarían al
+    // proceso hijo y —como dotenv no sobrescribe variables ya existentes— el
+    // .env propio del proyecto quedaría ignorado, haciendo que todos los
+    // proyectos escribieran en la base `nodepilot`. Las quitamos para que cada
+    // proyecto use su propio .env (su base de datos, su puerto, sus claves).
+    for (const key of Object.keys(env)) {
+      if (/^(DB_|DEEPSEEK_|GEMINI_|OPENROUTER_)/.test(key) || key === 'PORT') {
+        delete env[key];
+      }
+    }
+
     // Resolución robusta de Node/npm. Con nvm en Windows, `npm` es un .cmd que
     // invoca a `node` vía PATH; pero el prefijo global (AppData\Roaming\npm)
     // tiene un npm.cmd SIN node.exe al lado, y el directorio de nvm es un
@@ -293,6 +306,22 @@ class ProcessManager {
     if (!rec) throw httpError('No hay proceso corriendo.', 409);
     killTree(rec.pid);
     return { projectId, stopping: true };
+  }
+
+  // Igual que stop() pero NO lanza si no hay proceso. Mata el árbol del proceso
+  // y, por si el wrapper murió dejando un node escuchando, lo que siga en su
+  // puerto. Devuelve true si había algo que matar, para que el llamador espere
+  // a que Windows libere los archivos antes de borrar la carpeta del proyecto.
+  stopSilently(projectId) {
+    const rec = this.procs.get(projectId);
+    if (!rec) return false;
+    killTree(rec.pid);
+    const byPort = pidOnPort(rec.port);
+    if (byPort) killTree(byPort);
+    this.procs.delete(projectId);
+    this._persist();
+    this.emit({ type: 'status', ...this.status(projectId) });
+    return true;
   }
 
   async restart(projectId) {

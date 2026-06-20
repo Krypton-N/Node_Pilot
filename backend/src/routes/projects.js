@@ -34,6 +34,11 @@ router.post(
 router.delete(
   '/projects/:id',
   wrap(async (req, res) => {
+    // Si el proyecto está corriendo, sus archivos (node_modules, el server)
+    // están bloqueados en Windows y el borrado fallaría. Se detiene primero y
+    // se le da un margen al SO para liberar los handles antes de eliminar.
+    const stopped = processManager.stopSilently(req.params.id);
+    if (stopped) await new Promise((r) => setTimeout(r, 500));
     await fileService.deleteProject(req.params.id);
     res.status(204).end();
   })

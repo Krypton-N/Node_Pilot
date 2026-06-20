@@ -1,7 +1,7 @@
 const { WebSocketServer } = require('ws');
 const processManager = require('./services/processManager');
 
-// Levanta el servidor WebSocket sobre el mismo HTTP server (mismo puerto 3001).
+// Levanta el servidor WebSocket sobre el mismo HTTP server (mismo puerto 8080).
 // Cada cliente se suscribe a UN proyecto y recibe sus logs y cambios de estado.
 function setupWebSocket(server) {
   // Ruta propia: '/ws' choca con el WebSocket de HMR de webpack-dev-server.

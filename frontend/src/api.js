@@ -1,5 +1,5 @@
 // Cliente HTTP fino sobre la API de NodePilot. El proxy de Webpack reenvía
-// /api y /healthz al backend (:3001), así que usamos rutas relativas.
+// /api y /healthz al backend (:8080), así que usamos rutas relativas.
 
 async function request(url, options = {}) {
   const res = await fetch(url, options);

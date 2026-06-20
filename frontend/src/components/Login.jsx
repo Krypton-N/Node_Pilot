@@ -60,6 +60,46 @@ export default function Login({ onSuccess }) {
           {loading ? 'Entrando…' : 'Entrar'}
         </button>
       </form>
+
+      {/* Datos de la entrega visibles en pantalla (Proyecto Final IDPF-14) */}
+      <footer className="np-login-meta">
+        <div className="np-login-meta-title">
+          Proyecto Final IDPF-14 · Grupo 4BM1
+        </div>
+        <div className="np-login-meta-sub">
+          NodePilot — Aplicación Web Asistente de Codificación para Node.js con IA
+        </div>
+        <table className="np-login-meta-table">
+          <thead>
+            <tr>
+              <th>Apellido Paterno</th>
+              <th>Apellido Materno</th>
+              <th>Nombres</th>
+              <th>Boleta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Rodriguez</td>
+              <td>Flor</td>
+              <td>Alan Noe</td>
+              <td>2025630489</td>
+            </tr>
+            <tr>
+              <td>Martinez</td>
+              <td>Guzman</td>
+              <td>Evelyn Briseth</td>
+              <td>2025630417</td>
+            </tr>
+            <tr>
+              <td>Castorela</td>
+              <td>Cuevas</td>
+              <td>Uriel</td>
+              <td>2025630469</td>
+            </tr>
+          </tbody>
+        </table>
+      </footer>
     </div>
   );
 }
